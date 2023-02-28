@@ -6,8 +6,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.12",
+    "@heroicons/react": "^2.0.16",
     "firebase": "^9.17.1",
     "heroicons": "^2.0.16",
+    "lightweight-charts": "^4.0.0",
     "next": "latest",
     "next-auth": "^4.19.2",
     "react": "18.2.0",

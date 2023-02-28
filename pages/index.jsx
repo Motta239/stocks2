@@ -5,8 +5,8 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { FaUserAlt } from "react-icons/fa";
 import { AiFillStar, AiOutlineForward } from "react-icons/ai";
 import { BsFillGrid1X2Fill } from "react-icons/bs";
-
 import StockCard from "./stockCard";
+import NavBar from "./navBar";
 const Home = () => {
   const { data: session } = useSession();
   const stocks3 = [
@@ -1358,7 +1358,6 @@ const Home = () => {
           )}
         </div>
       </div>
-
       <div className=" min-h-screen space-y-4  backdrop-blur-lg items-center justify-center h py-2">
         <div
           className={`flex-wrap flex gap-4`}
@@ -1370,6 +1369,7 @@ const Home = () => {
           {session &&
             filteredItems
               .slice(pageNum, pageNum + 20)
+
               .map((x, i) => (
                 <StockCard
                   x={x}
@@ -1379,6 +1379,7 @@ const Home = () => {
                   user={session.user.email}
                   info={info}
                   numColumns={numColumns}
+                  width={screenResolution}
                   comments={comments
                     ?.map((item) => item.stock == x && item.info)
                     .filter(Boolean)}
@@ -1388,13 +1389,19 @@ const Home = () => {
       </div>
       <div className="flex items-center space-x-6 m-8 justify-center ">
         <AiOutlineForward
-          onClick={() => !pageNum == 0 && setPageNum(pageNum - 20)}
+          onClick={() => {
+            !pageNum == 0 && setPageNum(pageNum - 20);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           className="w-10 hover:text-blue-500  rotate-180 h-10"
         />
         <p>{pageNum + 20}</p>
         <AiOutlineForward
           className="w-10 hover:text-blue-500  h-10"
-          onClick={() => pageNum < stocks3.length && setPageNum(pageNum + 20)}
+          onClick={() => {
+            pageNum < stocks3.length && setPageNum(pageNum + 20);
+            window.scrollTo({ top: 0, behavior: "auto" });
+          }}
         />
       </div>
     </>
