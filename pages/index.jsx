@@ -5,6 +5,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { FaUserAlt } from "react-icons/fa";
 import { AiFillStar, AiOutlineForward } from "react-icons/ai";
 import { BsFillGrid1X2Fill } from "react-icons/bs";
+import { IoIosSearch } from "react-icons/io";
 import StockCard from "./stockCard";
 import NavBar from "./navBar";
 const Home = () => {
@@ -1262,8 +1263,8 @@ const Home = () => {
 
   return (
     <>
-      <div className={`navRow h-fit justify-between shadow-2xl`}>
-        <div className="  flex">
+      <div className={`navRow h-fit px-5 justify-between shadow-2xl`}>
+        <div className="flex">
           {!session ? (
             <div onClick={() => signIn()} className="navBtn">
               <FaUserAlt className="w-5 h-5" />
@@ -1293,7 +1294,7 @@ const Home = () => {
         >
           <div
             className={` ${
-              !active2 ? "text-blue-500" : "text-black"
+              !active2 ? "text-blue-500" : "text-stone-700"
             } hidden md:inline-flex`}
           >
             Favorites
@@ -1321,32 +1322,44 @@ const Home = () => {
         >
           {screenResolution < 760 ? "ALL" : "All Stocks"}
         </div>
-        <input
-          placeholder=" Search Ticker"
-          className="inputCss p-3 uppercase  placeholder:translate-x-7 "
-          type="text"
-          value={searchTerm}
-          onChange={handleSearch}
-        />
         <a className="navBtn    " onClick={() => setFrame(!frame)}>
           {frame === true ? "Daily" : "Weekly"}
         </a>
+        <div className=" hidden active:text-white border-[0.5px] bg-white  md:inline-block relative hover:scale-110 hover:-translate-y-1  shadow-xl rounded-2xl tr300  ">
+          {!searchTerm && (
+            <div className=" ">
+              <p className=" absolute  text-stone-700  rounded-lg  right-[50%]  transition-all ease-in duration-500 top-[26%] ">
+                {" "}
+                Ticker{" "}
+              </p>
+              <IoIosSearch className="absolute w-8 rounded-lg h-8 p-1 z-50 right-2 bg-slate-100 text-stone-700  transition-all ease-in duration-500 top-[17%] " />
+            </div>
+          )}
+          <input
+            className=" inputCss uppercase "
+            type="text"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
         <div
-          onMouseEnter={() => setActive(true)}
-          onMouseLeave={() => setActive(false)}
-          className="relative "
+          onClick={() => setActive(true)}
+          className="relative  navBtn  flex justify-center items-center "
         >
           <BsFillGrid1X2Fill
             className={`${active && "text-blue-500"} h-5 w-5  `}
           />
           {active && (
-            <div className="absolute  items-center justify-center">
-              {[1, 2, 3, 4, 5].map((value) => (
+            <div
+              onMouseLeave={() => setActive(false)}
+              className="absolute rounded-xl  p-3 translate-y-[140px] bg-stone-100   items-center justify-center"
+            >
+              {[1, 2, 3].map((value) => (
                 <button
                   key={value}
-                  className={`h-6 w-6 p-4 backdrop-blur-2xl navBtn hover:shadow-2xl border-[0.5px] rounded-full ${
+                  className={`h-10 w-10  backdrop-blur-2xl  hover:shadow-2xl border-[0.5px] rounded-full ${
                     numColumns === value
-                      ? "text-blue-500 bg-white backdrop-blur-2xl "
+                      ? "text-white bg-blue-500 shadow-lg backdrop-blur-2xl "
                       : "backdrop-blur-2xl bg-slate-50 text-gray-700"
                   } border-2 border-gray-200 flex items-center justify-center focus:outline-none`}
                   onClick={() => setNumColumns(value)}
@@ -1360,7 +1373,7 @@ const Home = () => {
       </div>
       <div className=" min-h-screen space-y-4  backdrop-blur-lg items-center justify-center h py-2">
         <div
-          className={`flex-wrap flex gap-4`}
+          className={` mt-4 flex gap-4`}
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${numColumns}, 1fr)`,

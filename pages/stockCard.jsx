@@ -140,7 +140,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
     e.target.checked = 0;
   }
   return (
-    <div key={i} className={`stockCard ${x} `}>
+    <div key={i} className={`stockCard ${x} py-5  space-y-4  `}>
       <div className={`stockImgRow ${x} `}>
         {toggoleBetweenFinToTradingView ? (
           <img
@@ -153,9 +153,9 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
           <TradingViewWidget stock={x} width={width} />
         )}
       </div>
-      <div className={`stockUpperRow ${x} `}>
+      <div className={`stockUpperRow items-center  flex ${x} `}>
         <div
-          className={` w-32 hover:scale-105 ${
+          className={` w-32  flex justify-center items-center h-12 hover:scale-105 ${
             !list?.includes(x) ? "text-black" : "text-yellow-400"
           }  `}
           onClick={() => addToFavorites(x)}
@@ -163,13 +163,13 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
           <AiFillStar className={`w-10 h-10`} />
         </div>
         <a
-          className="text-md items-center text-lg text-blue-600 flex justify-center  hover:text-gray-900 hover:scale-105 "
+          className="text-md w-32  flex justify-center h-12 items-center text-lg text-blue-600    hover:text-gray-900 hover:scale-105 "
           href={tradingViewURL}
           target="_blank"
         >
           {x}
         </a>
-        <div className="flex  h-10 border-[1px] rounded-lg   justify-around w-32 items-center   ">
+        <div className="flex   border-[1px] rounded-lg h-12  justify-around w-32   items-center   ">
           <TbChartDots3
             className={` ${
               toggole ? "text-gray-50 bg-blue-500  " : ""
@@ -187,15 +187,14 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
         </div>
       </div>
       <div
-        className={`flex flex-wrap items-center mt-4 justify-center  text-[10px] md:text-[15px] space-x-1 md:space-x-3`}
+        className={`flex flex-wrap  items-center  justify-center  text-[10px] md:text-[12px] space-x-1 md:space-x-3`}
       >
         {checkedInputs.map(({ name, color }) => (
           <label
-            onClick={() => setColor2(color)}
             className={` ${
               inputValue.includes(name) &&
-              ` text-white font-bold text-[15px] bg-${color}-500 `
-            } cbtn p-2 rounded-full px-3 my-1 font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
+              ` text-white font-bold  bg-${color}-500 `
+            } cbtn p-2 rounded-full md:text-[15px] text-[10px] px-3 my-1 hover:bg-stone-100 hover:text-${color}-500 font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
           >
             <input
               className=" opacity-0 hidden  "
@@ -209,7 +208,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       </div>
       {
         <form
-          className="flex m-6 items-center  justify-center space-x-2"
+          className="flex  items-center  justify-center space-x-2"
           onSubmit={handleSubmit}
         >
           {inputValue.length > 0 && (
@@ -227,14 +226,14 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             placeholder={`Write Comments About ${x}`}
           />
           <button
-            className=" rounded-full p-3  border hover:bg-blue-500 hover:text-white  bg-white text-blue-500"
+            className=" rounded-full h-10 w-24 px-4  border hover:bg-blue-500 hover:text-white  bg-white text-blue-500"
             type="submit"
           >
             Send
           </button>
         </form>
       }
-      <div className="flex-wrap flex m-3  text-[10px] md:text-[15px]  md:space-x-3 ">
+      <div className="flex-wrap flex   text-[10px] md:text-[15px]  md:space-x-3 ">
         {comments &&
           comments.map((item) => <div className="comment">{item}</div>)}
       </div>
