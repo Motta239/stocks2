@@ -3,8 +3,9 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { db } from "../firebaseConfig";
 import { doc, onSnapshot } from "firebase/firestore";
 import { FaUserAlt } from "react-icons/fa";
-import { AiFillStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineForward } from "react-icons/ai";
 import { BsFillGrid1X2Fill } from "react-icons/bs";
+
 import StockCard from "./stockCard";
 const Home = () => {
   const { data: session } = useSession();
@@ -1261,7 +1262,7 @@ const Home = () => {
 
   return (
     <>
-      <div className={`navRow h-fit justify-evenly shadow-2xl`}>
+      <div className={`navRow h-fit justify-between shadow-2xl`}>
         <div className="  flex">
           {!session ? (
             <div onClick={() => signIn()} className="navBtn">
@@ -1271,7 +1272,7 @@ const Home = () => {
               </button>
             </div>
           ) : (
-            <div className="flex space-x-2 navBtn justify-center items-center ">
+            <div className="flex  navBtn justify-center items-center ">
               <img
                 onClick={() => signOut()}
                 className="profilePic"
@@ -1368,7 +1369,7 @@ const Home = () => {
         >
           {session &&
             filteredItems
-              .slice(pageNum, pageNum + 50)
+              .slice(pageNum, pageNum + 20)
               .map((x, i) => (
                 <StockCard
                   x={x}
@@ -1384,6 +1385,17 @@ const Home = () => {
                 />
               ))}
         </div>
+      </div>
+      <div className="flex items-center space-x-6 m-8 justify-center ">
+        <AiOutlineForward
+          onClick={() => !pageNum == 0 && setPageNum(pageNum - 20)}
+          className="w-10 hover:text-blue-500  rotate-180 h-10"
+        />
+        <p>{pageNum + 20}</p>
+        <AiOutlineForward
+          className="w-10 hover:text-blue-500  h-10"
+          onClick={() => pageNum < stocks3.length && setPageNum(pageNum + 20)}
+        />
       </div>
     </>
   );

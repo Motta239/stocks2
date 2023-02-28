@@ -26,16 +26,63 @@ function stockCard({ x, i, frame, list, user, comments }) {
       : ""
   }`;
   const checkedInputs = [
-    " Long ",
-    " Short ",
-    " Double Top ",
-    " Fib ",
-    " Upside Break ",
-    " Downside Break ",
-    " Double Bottom ",
-    " Bear Flag ",
-    " Bullish Flag ",
+    {
+      name: "Long",
+      color: "green",
+    },
+    {
+      name: " Short ",
+      color: "red",
+    },
+    {
+      name: " Double Top ",
+      color: "red",
+    },
+    {
+      name: " Fib Retracment ",
+      color: "gray",
+    },
+    {
+      name: " Upside Break ",
+      color: "green",
+    },
+    {
+      name: " Downside Break ",
+      color: "red",
+    },
+    {
+      name: " Double Bottom ",
+      color: "green",
+    },
+    {
+      name: " Bear Flag ",
+      color: "red",
+    },
+    {
+      name: " Bullish Flag ",
+      color: "green",
+    },
+    {
+      name: " Up Trendline ",
+      color: "green",
+    },
+    {
+      name: " Down Trendline  ",
+      color: "red",
+    },
+    {
+      name: " Consolidation  ",
+      color: "gray",
+    },
   ];
+  // const objectsArray = checkedInputs.map((str) => {
+  //   return {
+  //     name: str,
+  //     color: "",
+  //   };
+  // });
+
+  // console.log(objectsArray);
   const handleChange = () => {
     setInputValue(inputRef.current.value);
   };
@@ -67,7 +114,7 @@ function stockCard({ x, i, frame, list, user, comments }) {
         ? inputRef.current.focus()
         : await updateDoc(doc(db, "users", user), {
             comments: arrayUnion({
-              info: inputValue,
+              info: `${frame ? "D" : "W"} : ${inputValue}`,
               stock: x,
               createdAt: Timestamp.now(),
             }),
@@ -94,7 +141,7 @@ function stockCard({ x, i, frame, list, user, comments }) {
       <div className={`stockImgRow ${x} `}>
         <div className={`stockUpperRow ${x} `}>
           <div
-            className={` hover:scale-105 ${
+            className={` w-32 hover:scale-105 ${
               !list?.includes(x) ? "text-black" : "text-yellow-400"
             }  `}
             onClick={() => addToFavorites(x)}
@@ -103,7 +150,7 @@ function stockCard({ x, i, frame, list, user, comments }) {
           </div>
 
           <a
-            className="text-gray-400 text-md items-center flex justify-center  hover:text-gray-900 hover:scale-105 "
+            className="text-md items-center text-lg text-blue-600 flex justify-center  hover:text-gray-900 hover:scale-105 "
             href={tradingViewURL}
             target="_blank"
           >
@@ -124,16 +171,22 @@ function stockCard({ x, i, frame, list, user, comments }) {
         <img className="w-full " key={i} src={finvizStockUrl} alt="A picture" />
       </div>
       <div
-        className={`flex flex-wrap items-center mt-4 justify-center text-[10px] md:text-[15px] space-x-1 md:space-x-3`}
+        className={`flex flex-wrap items-center mt-4 justify-center  text-[10px] md:text-[15px] space-x-1 md:space-x-3`}
       >
-        {checkedInputs.map((item) => (
-          <label className="cbtn">
+        {checkedInputs.map(({ name, color }) => (
+          <label
+            className={` ${
+              inputValue.includes(name) &&
+              `text-white bg-${color}-500 font-bold text-[15px]`
+            } cbtn p-2 rounded-full px-3 my-1 font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
+          >
             <input
+              className=" opacity-0 hidden  "
               type="checkbox"
-              value={item}
+              value={name}
               onChange={handleCheckboxChange}
             />
-            {item}
+            {name}
           </label>
         ))}
       </div>
@@ -149,7 +202,7 @@ function stockCard({ x, i, frame, list, user, comments }) {
             />
           )}
           <input
-            className=" border-2 px-2  shadow-2xl h-10  w-1/2 rounded-3xl focus:border-blue-500  "
+            className=" border-2 px-2  shadow-2xl h-10   w-1/2 rounded-3xl focus:border-blue-500  "
             type="text"
             ref={inputRef}
             onChange={handleChange}
@@ -157,14 +210,14 @@ function stockCard({ x, i, frame, list, user, comments }) {
             placeholder={`Write Comments About ${x}`}
           />
           <button
-            className=" rounded-full px-3  border hover:bg-blue-500 hover:text-white  bg-white text-blue-500"
+            className=" rounded-full p-3  border hover:bg-blue-500 hover:text-white  bg-white text-blue-500"
             type="submit"
           >
             Send
           </button>
         </form>
       }
-      <div className="flex-wrap flex m-3 justify-center text-[10px] md:text-[15px]  md:space-x-3 ">
+      <div className="flex-wrap flex m-3  text-[10px] md:text-[15px]  md:space-x-3 ">
         {comments &&
           comments.map((item) => <div className="comment">{item}</div>)}
       </div>
