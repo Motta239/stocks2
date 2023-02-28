@@ -32,8 +32,8 @@ export default function TradingViewWidget({ stock, width }) {
         "TradingView" in window
       ) {
         new window.TradingView.widget({
-          width: width - 70,
-          height: width * 0.4,
+          width: 1500 / width,
+          height: 610,
           symbol: `${stock}`,
           interval: "D",
           timezone: "Etc/UTC",
@@ -43,6 +43,7 @@ export default function TradingViewWidget({ stock, width }) {
           toolbar_bg: "#f1f3f6",
           enable_publishing: false,
           allow_symbol_change: true,
+          hide_side_toolbar: false,
           container_id: `tradingview_${stock}`,
         });
       }

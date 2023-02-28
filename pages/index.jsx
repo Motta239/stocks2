@@ -1379,7 +1379,7 @@ const Home = () => {
                   user={session.user.email}
                   info={info}
                   numColumns={numColumns}
-                  width={screenResolution}
+                  width={pageNum}
                   comments={comments
                     ?.map((item) => item.stock == x && item.info)
                     .filter(Boolean)}
