@@ -19,18 +19,11 @@ import TradingViewWidget from "./tradingViewChart";
 function stockCard({ x, i, frame, list, user, comments, width }) {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef(null);
+  const [color2, setColor2] = useState("");
   const [toggole, setToggole] = useState(false);
   const [toggoleBetweenFinToTradingView, setToggoleBetweenFinToTradingView] =
     useState(true);
-  const handleClick = () => {
-    if (toggoleBetweenFinToTradingView) {
-      setToggoleBetweenFinToTradingView(false);
-    } else {
-      setToggoleBetweenFinToTradingView(true);
-    }
-  };
-  console.log(toggoleBetweenFinToTradingView);
-  const tradingViewURL = `https://www.tradingview.com/chart/oMvKxzcu/?symbol=${x}`;
+  const tradingViewURL = `https://www.tradingview.com/chart/?symbol=${x}`;
   const finvizStockUrl = `https://charts2-node.finviz.com/chart.ashx?cs=l&t=${x}&tf=${
     frame ? "d" : "w"
   }&s=linear&ct=candle_stick${
@@ -53,7 +46,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
     },
     {
       name: " Fib Retracment ",
-      color: "gray",
+      color: "stone",
     },
     {
       name: " Upside Break ",
@@ -85,7 +78,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
     },
     {
       name: " Consolidation  ",
-      color: "gray",
+      color: "stone",
     },
   ];
   const handleChange = () => {
@@ -135,51 +128,20 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       });
     }
   };
-  function handleCheckboxChange(e) {
+  function handleCheckboxChange(e, color) {
     const { value, checked } = e.target;
-    checked && setInputValue([...inputValue, value]);
+    !inputValue.includes(value)
+      ? setInputValue([...inputValue, value])
+      : setInputValue(
+          inputValue.filter(function (item) {
+            return item !== value;
+          })
+        );
     e.target.checked = 0;
   }
   return (
     <div key={i} className={`stockCard ${x} `}>
       <div className={`stockImgRow ${x} `}>
-        <div className={`stockUpperRow ${x} `}>
-          <div
-            className={` w-32 hover:scale-105 ${
-              !list?.includes(x) ? "text-black" : "text-yellow-400"
-            }  `}
-            onClick={() => addToFavorites(x)}
-          >
-            <AiFillStar className={`w-10 h-10`} />
-          </div>
-          <a
-            className="text-md items-center text-lg text-blue-600 flex justify-center  hover:text-gray-900 hover:scale-105 "
-            href={tradingViewURL}
-            target="_blank"
-          >
-            {x}
-          </a>
-          <div className="flex  h-10 border-[1px] rounded-lg   justify-around w-32 items-center   ">
-            <TbChartDots3
-              className={` ${
-                toggole ? "text-gray-50 bg-blue-500  " : ""
-              } h-8  w-8 border-[1px] p-1 hover:text-gray-50 hover:bg-blue-500 hover:shadow-lg  rounded-lg `}
-              onClick={() => setToggole(!toggole)}
-            />
-            <TiChartLine
-              className={` ${
-                !toggoleBetweenFinToTradingView
-                  ? "text-gray-50 bg-blue-500 "
-                  : ""
-              } h-8 w-8 border-[1px] p-1 hover:text-gray-50 hover:bg-blue-500 hover:shadow-lg rounded-lg `}
-              onClick={() =>
-                setToggoleBetweenFinToTradingView(
-                  !toggoleBetweenFinToTradingView
-                )
-              }
-            />
-          </div>
-        </div>
         {toggoleBetweenFinToTradingView ? (
           <img
             className="w-full "
@@ -191,14 +153,48 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
           <TradingViewWidget stock={x} width={width} />
         )}
       </div>
+      <div className={`stockUpperRow ${x} `}>
+        <div
+          className={` w-32 hover:scale-105 ${
+            !list?.includes(x) ? "text-black" : "text-yellow-400"
+          }  `}
+          onClick={() => addToFavorites(x)}
+        >
+          <AiFillStar className={`w-10 h-10`} />
+        </div>
+        <a
+          className="text-md items-center text-lg text-blue-600 flex justify-center  hover:text-gray-900 hover:scale-105 "
+          href={tradingViewURL}
+          target="_blank"
+        >
+          {x}
+        </a>
+        <div className="flex  h-10 border-[1px] rounded-lg   justify-around w-32 items-center   ">
+          <TbChartDots3
+            className={` ${
+              toggole ? "text-gray-50 bg-blue-500  " : ""
+            } h-8  w-8 border-[1px] p-1 hover:text-gray-50 hover:bg-blue-500 hover:shadow-lg  rounded-lg `}
+            onClick={() => setToggole(!toggole)}
+          />
+          <TiChartLine
+            className={` ${
+              !toggoleBetweenFinToTradingView ? "text-gray-50 bg-blue-500 " : ""
+            } h-8 w-8 border-[1px] p-1 hover:text-gray-50 hover:bg-blue-500 hover:shadow-lg rounded-lg `}
+            onClick={() =>
+              setToggoleBetweenFinToTradingView(!toggoleBetweenFinToTradingView)
+            }
+          />
+        </div>
+      </div>
       <div
         className={`flex flex-wrap items-center mt-4 justify-center  text-[10px] md:text-[15px] space-x-1 md:space-x-3`}
       >
         {checkedInputs.map(({ name, color }) => (
           <label
+            onClick={() => setColor2(color)}
             className={` ${
               inputValue.includes(name) &&
-              `text-white bg-${color}-500 font-bold text-[15px]`
+              ` text-white font-bold text-[15px] bg-${color}-500 `
             } cbtn p-2 rounded-full px-3 my-1 font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
           >
             <input
