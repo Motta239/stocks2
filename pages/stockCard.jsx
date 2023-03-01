@@ -16,6 +16,7 @@ import { TbChartDots3 } from "react-icons/tb";
 import { TiChartLine } from "react-icons/ti";
 
 import TradingViewWidget from "./tradingViewChart";
+import toast, { Toaster } from "react-hot-toast";
 function stockCard({ x, i, frame, list, user, comments, width }) {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef(null);
@@ -87,19 +88,20 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
   const addToFavorites = async () => {
     const docRef = doc(db, "users", user);
     const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      await updateDoc(doc(db, "users", `${user}`), {
-        stock: arrayUnion(x),
-      });
-      list?.includes(x) &&
-        (await updateDoc(doc(db, "users", user), {
-          stock: arrayRemove(x),
-        }));
-    } else {
-      await setDoc(doc(db, "users", `${user}`), {
-        stock: arrayUnion(x),
-      });
+    {
+      if (docSnap.exists()) {
+        await updateDoc(doc(db, "users", `${user}`), {
+          stock: arrayUnion(x),
+        });
+        list?.includes(x) &&
+          (await updateDoc(doc(db, "users", user), {
+            stock: arrayRemove(x),
+          }));
+      } else {
+        await setDoc(doc(db, "users", `${user}`), {
+          stock: arrayUnion(x),
+        });
+      }
     }
   };
   const handleSubmit = async (event) => {
@@ -141,6 +143,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
   }
   return (
     <div key={i} className={`stockCard ${x} py-5  space-y-4  `}>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className={`stockImgRow ${x} `}>
         {toggoleBetweenFinToTradingView ? (
           <img
@@ -158,7 +161,11 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
           className={` w-32  flex justify-center items-center h-12 hover:scale-105 ${
             !list?.includes(x) ? "text-black" : "text-yellow-400"
           }  `}
-          onClick={() => addToFavorites(x)}
+          onClick={() =>
+            user
+              ? addToFavorites(x)
+              : toast.error(`Must Login To Add ${x} To Favorites `)
+          }
         >
           <AiFillStar className={`w-10 h-10`} />
         </div>

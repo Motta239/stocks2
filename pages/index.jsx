@@ -6,8 +6,10 @@ import { FaUserAlt } from "react-icons/fa";
 import { AiFillStar, AiOutlineForward } from "react-icons/ai";
 import { BsFillGrid1X2Fill } from "react-icons/bs";
 import { IoIosSearch } from "react-icons/io";
+import { FcGoogle } from "react-icons/fc";
 import StockCard from "./stockCard";
 import NavBar from "./navBar";
+import toast, { Toaster } from "react-hot-toast";
 const Home = () => {
   const { data: session } = useSession();
   const stocks3 = [
@@ -1263,6 +1265,7 @@ const Home = () => {
 
   return (
     <>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className={`navRow h-fit px-5 justify-between shadow-2xl`}>
         <div className="flex">
           {!session ? (
@@ -1285,11 +1288,48 @@ const Home = () => {
           )}
         </div>
         <div
-          onClick={() => {
-            setPageNum(0);
-            setFilteredItems(list);
-            setActive2(false);
-          }}
+          onClick={() =>
+            session
+              ? setFilteredItems(list)
+              : toast.custom((t) => (
+                  <div
+                    className={`${
+                      t.visible ? "animate-enter" : "animate-leave"
+                    } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+                  >
+                    <div className="flex-1 w-0 p-4">
+                      <div className="flex items-start">
+                        <div className="ml-3 flex justify-center items-center flex-1">
+                          <p className=" font-medium text-[14px]  text-gray-900">
+                            Must be looged in To Add Favorites
+                          </p>
+                        </div>
+                        <div
+                          onClick={() => {
+                            window.open(
+                              "https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=380604098053-0pv7pqf3mefov41triiinodcqgdomlki.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&state=7wdHrAHO8L7oMTqirjQEf190VKScQ4phYwND9s0qwWo&code_challenge=M23gHl1g4IpOMgavb4JN9mVq4h7ysC4ZOuQnJU11pa4&code_challenge_method=S256&service=lso&o2v=2&flowName=GeneralOAuthFlow"
+                            );
+                          }}
+                          className="flex items-center justify-center space-x-2 border-[0.5px] rounded-xl h-10 w-32 "
+                        >
+                          <FcGoogle className="w-5 h-5" />
+                          <button className="hidden lg:inline-flex ">
+                            {screenResolution > 750 ? "Sign in" : ""}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex border-l border-gray-200">
+                      <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                ))
+          }
           className="navBtn "
         >
           <div
@@ -1379,25 +1419,24 @@ const Home = () => {
             gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
           }}
         >
-          {session &&
-            filteredItems
-              .slice(pageNum, pageNum + 20)
+          {filteredItems
+            .slice(pageNum, pageNum + 20)
 
-              .map((x, i) => (
-                <StockCard
-                  x={x}
-                  i={i}
-                  frame={frame}
-                  list={list}
-                  user={session.user.email}
-                  info={info}
-                  numColumns={numColumns}
-                  width={pageNum}
-                  comments={comments
-                    ?.map((item) => item.stock == x && item.info)
-                    .filter(Boolean)}
-                />
-              ))}
+            .map((x, i) => (
+              <StockCard
+                x={x}
+                i={i}
+                frame={frame}
+                list={list}
+                user={session?.user?.email}
+                info={info}
+                numColumns={numColumns}
+                width={pageNum}
+                comments={comments
+                  ?.map((item) => item.stock == x && item.info)
+                  .filter(Boolean)}
+              />
+            ))}
         </div>
       </div>
       <div className="flex items-center space-x-6 m-8 justify-center ">
