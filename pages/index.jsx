@@ -1307,7 +1307,7 @@ const Home = () => {
                         <div
                           onClick={() => {
                             window.open(
-                              "https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=380604098053-0pv7pqf3mefov41triiinodcqgdomlki.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fgoogle&state=7wdHrAHO8L7oMTqirjQEf190VKScQ4phYwND9s0qwWo&code_challenge=M23gHl1g4IpOMgavb4JN9mVq4h7ysC4ZOuQnJU11pa4&code_challenge_method=S256&service=lso&o2v=2&flowName=GeneralOAuthFlow"
+                              "https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=380604098053-0pv7pqf3mefov41triiinodcqgdomlki.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=https%3A%2F%2Fstocks-nu.vercel.app%2Fapi%2Fauth%2Fcallback%2Fgoogle&state=_9Ktt-RLfzJMjWoT0e1WcP7zS79WfgfQgkXmXXc4tnk&code_challenge=MD3tm5gyfj8j7Q-dz0PX1yCuLaW3TdSncFoIW777Xy0&code_challenge_method=S256&service=lso&o2v=2&flowName=GeneralOAuthFlow"
                             );
                           }}
                           className="flex items-center justify-center space-x-2 border-[0.5px] rounded-xl h-10 w-32 "
