@@ -1251,7 +1251,8 @@ const Home = () => {
     };
   }, []);
   useEffect(() => {
-    screenResolution > 1042 ? setNumColumns(numColumns) : setNumColumns(1);
+    screenResolution > 850 ? setNumColumns(numColumns) : setNumColumns(1);
+    screenResolution < 1280 && numColumns == 3 && setNumColumns(2);
   }, [screenResolution]);
   console.log(screenResolution);
   const handleSearch = (e) => {
@@ -1266,7 +1267,7 @@ const Home = () => {
   return (
     <>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className={`navRow h-fit px-5 justify-between shadow-2xl`}>
+      <div className={`navRow h-fit px-5  justify-between shadow-2xl`}>
         <div className="flex">
           {!session ? (
             <div onClick={() => signIn()} className="navBtn">
@@ -1383,7 +1384,9 @@ const Home = () => {
           />
         </div>
         <div
-          onClick={() => setActive(true)}
+          onClick={() =>
+            numColumns == 3 ? setNumColumns(1) : setNumColumns(numColumns + 1)
+          }
           className="relative  navBtn  flex justify-center items-center "
         >
           <BsFillGrid1X2Fill
@@ -1392,9 +1395,9 @@ const Home = () => {
           {active && (
             <div
               onMouseLeave={() => setActive(false)}
-              className="absolute rounded-xl  p-3 translate-y-[140px] bg-stone-100   items-center justify-center"
+              className="absolute rounded-xl  p-3 translate-y-[100px] bg-stone-100   items-center justify-center"
             >
-              {[1, 2, 3].map((value) => (
+              {[1, 2].map((value) => (
                 <button
                   key={value}
                   className={`h-10 w-10  backdrop-blur-2xl  hover:shadow-2xl border-[0.5px] rounded-full ${
@@ -1413,7 +1416,7 @@ const Home = () => {
       </div>
       <div className=" min-h-screen space-y-4  backdrop-blur-lg items-center justify-center h py-2">
         <div
-          className={` mt-4 flex gap-4`}
+          className={` mt-4  w-[100wh] grid-cols-1 md:grid-cols-2 grid  gap-4 `}
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${numColumns}, 1fr)`,

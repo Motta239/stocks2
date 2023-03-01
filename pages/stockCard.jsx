@@ -102,6 +102,9 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
           stock: arrayUnion(x),
         });
       }
+      !list?.includes(x)
+        ? toast.success(`${x} Added`)
+        : toast.error(`${x} Removed`);
     }
   };
   const handleSubmit = async (event) => {
@@ -141,8 +144,11 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
         );
     e.target.checked = 0;
   }
+  const HandleToastMessage = (message) => {
+    toast(message);
+  };
   return (
-    <div key={i} className={`stockCard ${x} py-5  space-y-4  `}>
+    <div key={i} className={`stockCard ${x} py-5  space-y-4   `}>
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className={`stockImgRow ${x} `}>
         {toggoleBetweenFinToTradingView ? (
@@ -158,6 +164,13 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       </div>
       <div className={`stockUpperRow items-center  flex ${x} `}>
         <div
+          onMouseEnter={() =>
+            HandleToastMessage(
+              `${!list?.includes(x) ? "Add" : "Remove"} ${x}  ${
+                !list?.includes(x) ? "To" : "From"
+              } Favorites `
+            )
+          }
           className={` w-32  flex justify-center items-center h-12 hover:scale-105 ${
             !list?.includes(x) ? "text-black" : "text-yellow-400"
           }  `}
@@ -170,6 +183,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
           <AiFillStar className={`w-10 h-10`} />
         </div>
         <a
+          onMouseEnter={() => HandleToastMessage("Open In TradingView")}
           className="text-md w-32  flex justify-center h-12 items-center text-lg text-blue-600    hover:text-gray-900 hover:scale-105 "
           href={tradingViewURL}
           target="_blank"
