@@ -1470,7 +1470,7 @@ const Home = () => {
         onMouseEnter={() => setPagenumVisible(true)}
         className={`flex items-center   ${
           pagenumVisible ? "inset-[50%]  bottom-10  -translate-x-[50%] " : ""
-        }   text-gray-700 hover:scale-110 tr300 sticky rounded-2xl border-[0.5px] hover:bg-slate-50 bg-white shadow-xl h-14 z-50 w-36 space-x-6 m-8 justify-center `}
+        }   text-gray-700 hover:scale-110 tr300 sticky rounded-2xl border-[0.5px] tr300 ease-in-out  hover:bg-slate-50 bg-white shadow-xl h-14 z-50 w-36 space-x-6 m-8 justify-center `}
       >
         <AiOutlineForward
           onClick={() => {

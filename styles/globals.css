@@ -37,6 +37,6 @@
     @apply items-center justify-evenly  text-[15px] lg:text-lg  pb-2;
   }
   .tr300 {
-    @apply transition-all ease-out duration-300;
+    @apply transition-all ease-out duration-500;
   }
 }
