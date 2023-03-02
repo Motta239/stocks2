@@ -11,6 +11,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { AiFillStar } from "react-icons/ai";
+import { MdCancel } from "react-icons/md";
 import { BsFillEraserFill } from "react-icons/bs";
 import { TbChartDots3 } from "react-icons/tb";
 import { TiChartLine } from "react-icons/ti";
@@ -20,7 +21,7 @@ import toast, { Toaster } from "react-hot-toast";
 function stockCard({ x, i, frame, list, user, comments, width }) {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef(null);
-  const [filterColors, setFilterColors] = useState("");
+  const [showStar, setShowStar] = useState(false);
   const [toggole, setToggole] = useState(false);
   const [toggoleBetweenFinToTradingView, setToggoleBetweenFinToTradingView] =
     useState(true);
@@ -139,7 +140,6 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             comments: arrayUnion({
               info: `${frame ? "D" : "W"} : ${inputValue}`,
               stock: x,
-              createdAt: Timestamp.now(),
             }),
           });
       setInputValue("");
@@ -148,11 +148,22 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
         comments: arrayUnion({
           info: inputValue,
           stock: x,
-          createdAt: Timestamp.now(),
         }),
       });
     }
   };
+  const handleSubmit2 = async (m) => {
+    const docRef = doc(db, "users", user);
+    const docSnap = await getDoc(docRef);
+
+    await updateDoc(doc(db, "users", user), {
+      comments: arrayRemove({
+        info: m,
+        stock: x,
+      }),
+    });
+  };
+
   function handleCheckboxChange(e, color) {
     const { value, checked } = e.target;
     !inputValue.includes(value)
@@ -162,7 +173,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             return item !== value;
           })
         );
-    setFilterColors(color);
+
     e.target.checked = 0;
   }
 
@@ -255,7 +266,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             />
           )}
           <input
-            className="  px-2  shadow-2xl h-10  inputCss border-[0.4px]  w-1/2  shadow-none   "
+            className="  px-2  h-10  inputCss border-[0.4px]  w-1/2  shadow-none   "
             type="text"
             ref={inputRef}
             onChange={handleChange}
@@ -272,7 +283,21 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       }
       <div className="flex-wrap flex   text-[10px] md:text-[15px]  md:space-x-3 ">
         {comments &&
-          comments.map((item) => <div className="comment">{item}</div>)}
+          comments.map((item) => (
+            <div
+              onMouseEnter={() => setShowStar(true)}
+              onMouseLeave={() => setShowStar(false)}
+              className="flex items-center relative space-x-2 comment rounded-xl  tr300  ease-in-out border-[0.5px]   "
+            >
+              <div className="  ">{item}</div>
+              {showStar && (
+                <MdCancel
+                  onClick={() => handleSubmit2(item)}
+                  className="w-5 h-5 hover:text-red-500 "
+                />
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );
