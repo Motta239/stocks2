@@ -38,7 +38,19 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       color: "green",
     },
     {
-      name: " Short ",
+      name: "Stage 1 ",
+      color: "green",
+    },
+    {
+      name: "Stage 2  ",
+      color: "green",
+    },
+    {
+      name: "Head and Shoulders",
+      color: "green",
+    },
+    {
+      name: " Inverse Head and Shoulders ",
       color: "red",
     },
     {
@@ -80,6 +92,14 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
     {
       name: " Consolidation  ",
       color: "#2020a0",
+    },
+    {
+      name: " Multiply Tops  ",
+      color: "red",
+    },
+    {
+      name: " Multiply Bottoms ",
+      color: "green",
     },
   ];
   const handleChange = () => {
@@ -147,7 +167,10 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
   }
 
   return (
-    <div key={i} className={`stockCard ${x} py-5  space-y-4   `}>
+    <div
+      key={i}
+      className={`stockCard ${x} py-5  space-y-4  border-[#709eff2b] `}
+    >
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className={`stockImgRow ${x} `}>
         {toggoleBetweenFinToTradingView ? (
@@ -208,10 +231,10 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             }}
             className={` ${
               inputValue.includes(name) && ` text-white font-bold   `
-            } cbtn p-2 rounded-full md:text-[15px] text-gray-700 text-[10px] px-3 my-1 hover:bg-stone-100 hover:text-${color}-500 font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
+            } cbtn p-2 rounded-full md:text-[15px] text-gray-700 text-[10px] px-3 my-1 hover:bg-stone-100  font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
           >
             <input
-              className=" opacity-0 hidden  "
+              className=" opacity-0 hidden active:outline-0  focus:border-transparent focus:ring-0 !outline-none   "
               type="checkbox"
               value={name}
               onChange={handleCheckboxChange}
@@ -232,12 +255,12 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             />
           )}
           <input
-            className=" border-2 px-2  shadow-2xl h-10   w-1/2 rounded-3xl focus:border-blue-500  "
+            className="  px-2  shadow-2xl h-10  inputCss border-[0.4px]  w-1/2  shadow-none   "
             type="text"
             ref={inputRef}
             onChange={handleChange}
             value={inputValue}
-            placeholder={`Write Comments About ${x}`}
+            placeholder={` Forecast About ${x}`}
           />
           <button
             className=" rounded-full h-10 w-24 px-4  border hover:bg-blue-500 hover:text-white  bg-white text-blue-500"

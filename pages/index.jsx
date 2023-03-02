@@ -8,7 +8,7 @@ import { BsFillGrid1X2Fill } from "react-icons/bs";
 import { IoIosSearch } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
 import StockCard from "./stockCard";
-import NavBar from "./navBar";
+
 import toast, { Toaster } from "react-hot-toast";
 const Home = () => {
   const { data: session } = useSession();
@@ -1260,12 +1260,17 @@ const Home = () => {
   }, [searchTerm]);
   useEffect(() => {
     let timer;
+    let timer2;
     const handleScroll = () => {
-      setPagenumVisible(true);
+      clearTimeout(timer2);
+      timer2 = setTimeout(() => {
+        setPagenumVisible(true);
+      }, 1000);
+
       clearTimeout(timer);
       timer = setTimeout(() => {
         setPagenumVisible(false);
-      }, 4000);
+      }, 7000);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
