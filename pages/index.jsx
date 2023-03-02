@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { db } from "../firebaseConfig";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -1225,6 +1225,7 @@ const Home = () => {
   const [screenResolution, setScreenResolution] = useState("");
   const [pageNum, setPageNum] = useState(0);
   const [info, setInfo] = useState();
+  const [pagenumVisible, setPagenumVisible] = useState(true);
   const list = info?.stock;
   const comments = info?.comments;
   useEffect(() => {
@@ -1254,6 +1255,23 @@ const Home = () => {
     screenResolution > 850 ? setNumColumns(numColumns) : setNumColumns(1);
     screenResolution < 1280 && numColumns == 3 && setNumColumns(2);
   }, [screenResolution]);
+  useEffect(() => {
+    searchTerm;
+  }, [searchTerm]);
+  useEffect(() => {
+    let timer;
+    const handleScroll = () => {
+      setPagenumVisible(true);
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        setPagenumVisible(false);
+      }, 4000);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  const myNum = useRef(pageNum);
+
   console.log(screenResolution);
   const handleSearch = (e) => {
     const search = e.target.value;
@@ -1267,7 +1285,12 @@ const Home = () => {
   return (
     <>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div className={`navRow h-fit px-5  justify-between shadow-2xl`}>
+      <div
+        className={`navRow h-fit px-5 sticky
+        ${
+          pagenumVisible ? "top-0" : "top-[-100px]"
+        }  justify-between shadow-2xl tr300  ease-in-out `}
+      >
         <div className="flex">
           {!session ? (
             <div onClick={() => signIn()} className="navBtn">
@@ -1366,7 +1389,7 @@ const Home = () => {
         <a className="navBtn    " onClick={() => setFrame(!frame)}>
           {frame === true ? "Daily" : "Weekly"}
         </a>
-        <div className=" hidden active:text-white border-[0.5px] bg-white  md:inline-block relative hover:scale-110 hover:-translate-y-1  shadow-xl rounded-2xl tr300  ">
+        <div className=" hidden active:text-white border-[0.5px] bg-white   md:inline-block relative hover:scale-110 hover:-translate-y-1  shadow-xl rounded-2xl tr300  ">
           {!searchTerm && (
             <div className=" ">
               <p className=" absolute  text-stone-700  rounded-lg  right-[50%]  transition-all ease-in duration-500 top-[26%] ">
@@ -1377,7 +1400,8 @@ const Home = () => {
             </div>
           )}
           <input
-            className=" inputCss uppercase "
+            placeholder="Search.."
+            className=" inputCss placeholder:text-sm "
             type="text"
             value={searchTerm}
             onChange={handleSearch}
@@ -1416,7 +1440,7 @@ const Home = () => {
       </div>
       <div className=" min-h-screen space-y-4  backdrop-blur-lg items-center justify-center h py-2">
         <div
-          className={` mt-4  w-[100wh] grid-cols-1 md:grid-cols-2 grid  gap-4 `}
+          className={` mt-4   grid-cols-1 md:grid-cols-2 xl:grid-cols-3  grid  gap-2 `}
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
@@ -1442,7 +1466,12 @@ const Home = () => {
             ))}
         </div>
       </div>
-      <div className="flex items-center space-x-6 m-8 justify-center ">
+      <div
+        onMouseEnter={() => setPagenumVisible(true)}
+        className={`flex items-center   ${
+          pagenumVisible ? "inset-[50%]  bottom-10  -translate-x-[50%] " : ""
+        }   text-gray-700 hover:scale-110 tr300 sticky rounded-2xl border-[0.5px] hover:bg-slate-50 bg-white shadow-xl h-14 z-50 w-36 space-x-6 m-8 justify-center `}
+      >
         <AiOutlineForward
           onClick={() => {
             !pageNum == 0 && setPageNum(pageNum - 20);
@@ -1450,6 +1479,7 @@ const Home = () => {
           }}
           className="w-10 hover:text-blue-500  rotate-180 h-10"
         />
+
         <p>{pageNum + 20}</p>
         <AiOutlineForward
           className="w-10 hover:text-blue-500  h-10"
@@ -1459,6 +1489,7 @@ const Home = () => {
           }}
         />
       </div>
+      )
     </>
   );
 };

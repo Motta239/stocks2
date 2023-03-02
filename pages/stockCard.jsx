@@ -20,7 +20,7 @@ import toast, { Toaster } from "react-hot-toast";
 function stockCard({ x, i, frame, list, user, comments, width }) {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef(null);
-  const [color2, setColor2] = useState("");
+  const [filterColors, setFilterColors] = useState("");
   const [toggole, setToggole] = useState(false);
   const [toggoleBetweenFinToTradingView, setToggoleBetweenFinToTradingView] =
     useState(true);
@@ -47,7 +47,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
     },
     {
       name: " Fib Retracment ",
-      color: "stone",
+      color: "#2020a0",
     },
     {
       name: " Upside Break ",
@@ -79,7 +79,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
     },
     {
       name: " Consolidation  ",
-      color: "stone",
+      color: "#2020a0",
     },
   ];
   const handleChange = () => {
@@ -142,11 +142,10 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             return item !== value;
           })
         );
+    setFilterColors(color);
     e.target.checked = 0;
   }
-  const HandleToastMessage = (message) => {
-    toast(message);
-  };
+
   return (
     <div key={i} className={`stockCard ${x} py-5  space-y-4   `}>
       <Toaster position="bottom-center" reverseOrder={false} />
@@ -164,15 +163,8 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       </div>
       <div className={`stockUpperRow items-center  flex ${x} `}>
         <div
-          onMouseEnter={() =>
-            HandleToastMessage(
-              `${!list?.includes(x) ? "Add" : "Remove"} ${x}  ${
-                !list?.includes(x) ? "To" : "From"
-              } Favorites `
-            )
-          }
           className={` w-32  flex justify-center items-center h-12 hover:scale-105 ${
-            !list?.includes(x) ? "text-black" : "text-yellow-400"
+            !list?.includes(x) ? "text-gray-700" : "text-yellow-400"
           }  `}
           onClick={() =>
             user
@@ -183,14 +175,13 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
           <AiFillStar className={`w-10 h-10`} />
         </div>
         <a
-          onMouseEnter={() => HandleToastMessage("Open In TradingView")}
           className="text-md w-32  flex justify-center h-12 items-center text-lg text-blue-600    hover:text-gray-900 hover:scale-105 "
           href={tradingViewURL}
           target="_blank"
         >
           {x}
         </a>
-        <div className="flex   border-[1px] rounded-lg h-12  justify-around w-32   items-center   ">
+        <div className="flex text-gray-700  border-[1px] rounded-lg h-12  justify-around w-32   items-center   ">
           <TbChartDots3
             className={` ${
               toggole ? "text-gray-50 bg-blue-500  " : ""
@@ -212,10 +203,12 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       >
         {checkedInputs.map(({ name, color }) => (
           <label
+            style={{
+              backgroundColor: `${inputValue.includes(name) ? color : "white"}`,
+            }}
             className={` ${
-              inputValue.includes(name) &&
-              ` text-white font-bold  bg-${color}-500 `
-            } cbtn p-2 rounded-full md:text-[15px] text-[10px] px-3 my-1 hover:bg-stone-100 hover:text-${color}-500 font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
+              inputValue.includes(name) && ` text-white font-bold   `
+            } cbtn p-2 rounded-full md:text-[15px] text-gray-700 text-[10px] px-3 my-1 hover:bg-stone-100 hover:text-${color}-500 font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
           >
             <input
               className=" opacity-0 hidden  "

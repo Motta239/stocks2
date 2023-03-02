@@ -10,7 +10,7 @@
     @apply flex md:border-[0.5px] h-12 w-16 md:w-28  justify-center   bg-white items-center hover:text-blue-500 text-stone-700 rounded-full shadow-xl text-xs transition ease-in-out hover:-translate-y-1   md:space-x-1;
   }
   .navRow {
-    @apply sticky flex top-0 left-0 space-x-2  items-center right-0 z-10 p-4 transition ease-in-out delay-150  backdrop-blur-lg;
+    @apply flex top-0 left-0 space-x-2  items-center right-0 z-10 p-4 transition ease-in-out duration-500  backdrop-blur-lg;
   }
   .inputCss {
     @apply rounded-2xl md:inline-block   hidden md:h-12 md:w-28 translate-x-2  active:outline-0  focus:border-transparent focus:ring-0 !outline-none transition ease-in-out duration-300;
