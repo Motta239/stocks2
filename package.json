@@ -8,6 +8,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.12",
     "@heroicons/react": "^2.0.16",
+    "daisyui": "^2.51.3",
     "firebase": "^9.17.1",
     "heroicons": "^2.0.16",
     "lightweight-charts": "^4.0.0",
@@ -21,6 +22,7 @@
     "react-new-window": "^1.0.1",
     "react-redux": "^8.0.5",
     "reactjs-popup": "^2.0.5",
+    "recoil": "^0.7.7",
     "redux": "^4.2.1"
   },
   "devDependencies": {

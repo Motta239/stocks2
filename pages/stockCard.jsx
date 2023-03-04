@@ -20,7 +20,11 @@ import TradingViewWidget from "./tradingViewChart";
 import toast, { Toaster } from "react-hot-toast";
 function stockCard({ x, i, frame, list, user, comments, width }) {
   const [inputValue, setInputValue] = useState("");
+  const [editValue, setEditValue] = useState("");
   const inputRef = useRef(null);
+  const editRef = useRef(null);
+
+  const [editMode, setEditMode] = useState(false);
   const [showStar, setShowStar] = useState(false);
   const [toggole, setToggole] = useState(false);
   const [toggoleBetweenFinToTradingView, setToggoleBetweenFinToTradingView] =
@@ -106,6 +110,9 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
   const handleChange = () => {
     setInputValue(inputRef.current.value);
   };
+  const handleChange2 = () => {
+    setEditMode(editRef.current.value);
+  };
   const addToFavorites = async () => {
     const docRef = doc(db, "users", user);
     const docSnap = await getDoc(docRef);
@@ -138,7 +145,9 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
         ? inputRef.current.focus()
         : await updateDoc(doc(db, "users", user), {
             comments: arrayUnion({
-              info: `${frame ? "D" : "W"} : ${inputValue}`,
+              info: `${frame ? "D" : "W"} : ${
+                inputValue.length == 0 ? editValue : inputValue
+              }`,
               stock: x,
             }),
           });
@@ -180,7 +189,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
   return (
     <div
       key={i}
-      className={`stockCard ${x} py-5  space-y-4  border-[#709eff2b] `}
+      className={`stockCard ${x} py-5  space-y-4 bg-white border-[#709eff2b] `}
     >
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className={`stockImgRow ${x} `}>
@@ -269,8 +278,8 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             className="  px-2  h-10  inputCss border-[0.4px]  w-1/2  shadow-none   "
             type="text"
             ref={inputRef}
-            onChange={handleChange}
             value={inputValue}
+            onChange={handleChange}
             placeholder={` Forecast About ${x}`}
           />
           <button
@@ -283,13 +292,36 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       }
       <div className="flex-wrap flex   text-[10px] md:text-[15px]  md:space-x-3 ">
         {comments &&
-          comments.map((item) => (
+          comments.map((item, i) => (
             <div
+              key={i}
+              onDoubleClick={() => setEditMode(true)}
               onMouseEnter={() => setShowStar(true)}
-              onMouseLeave={() => setShowStar(false)}
+              onMouseLeave={() => {
+                setEditMode(false);
+
+                setShowStar(false);
+              }}
               className="flex items-center relative space-x-2 comment rounded-xl  tr300  ease-in-out border-[0.5px]   "
             >
-              <div className="  ">{item}</div>
+              {editMode ? (
+                <div className="flex">
+                  <input
+                    ref={editRef}
+                    value={`${editValue}`}
+                    onChange={handleChange2}
+                    className=" text-black "
+                  />
+                  <button
+                    className=" rounded-full h-10 w-24 px-4  border hover:bg-blue-500 hover:text-white  bg-white text-blue-500"
+                    type="submit"
+                  >
+                    Send
+                  </button>
+                </div>
+              ) : (
+                <div className="  ">{item}</div>
+              )}
               {showStar && (
                 <MdCancel
                   onClick={() => handleSubmit2(item)}

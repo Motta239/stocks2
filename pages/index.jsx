@@ -8,6 +8,10 @@ import { BsFillGrid1X2Fill } from "react-icons/bs";
 import { IoIosSearch } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
 import StockCard from "./stockCard";
+import Navbar from "./navbar";
+import { useRecoilState } from "recoil";
+import { searchValueAtom } from "../atoms/searchValueAtom";
+import { selectedAtom } from "../atoms/selectedAtom";
 
 import toast, { Toaster } from "react-hot-toast";
 const Home = () => {
@@ -1216,48 +1220,19 @@ const Home = () => {
     "XBI",
   ];
   const user = session?.user?.email;
-  const [searchTerm, setSearchTerm] = useState("");
+  const [search] = useRecoilState(searchValueAtom);
+  const [selected, setSelected] = useRecoilState(selectedAtom);
   const [filteredItems, setFilteredItems] = useState(stocks3);
-  const [frame, setFrame] = useState(true);
-  const [numColumns, setNumColumns] = useState(1);
-  const [active, setActive] = useState(false);
-  const [active2, setActive2] = useState(true);
-  const [screenResolution, setScreenResolution] = useState("");
   const [pageNum, setPageNum] = useState(0);
   const [info, setInfo] = useState();
   const [pagenumVisible, setPagenumVisible] = useState(true);
-  const list = info?.stock;
-  const comments = info?.comments;
-  useEffect(() => {
-    getData();
-  }, [session, db]);
 
-  const getData = async () => {
+  useEffect(() => {
     const unsub = onSnapshot(doc(db, "users", `${user}`), (doc) => {
       setInfo(doc.data());
     });
-  };
+  }, [session, db]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenResolution(window.innerWidth);
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-  useEffect(() => {
-    screenResolution > 850 ? setNumColumns(numColumns) : setNumColumns(1);
-    screenResolution < 1280 && numColumns == 3 && setNumColumns(2);
-  }, [screenResolution]);
-  useEffect(() => {
-    searchTerm;
-  }, [searchTerm]);
   useEffect(() => {
     let timer;
     let timer2;
@@ -1265,206 +1240,49 @@ const Home = () => {
       clearTimeout(timer2);
       timer2 = setTimeout(() => {
         setPagenumVisible(true);
-      }, 1000);
+      }, 200);
 
       clearTimeout(timer);
       timer = setTimeout(() => {
         setPagenumVisible(false);
-      }, 7000);
+      }, 3000);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  const myNum = useRef(pageNum);
 
-  console.log(screenResolution);
-  const handleSearch = (e) => {
-    const search = e.target.value;
-    setSearchTerm(search);
+  useEffect(() => {
     const filtered = stocks3
       .filter((item, index) => stocks3.indexOf(item) === index)
       .filter((item) => item.toLowerCase().includes(search.toLowerCase()));
     setFilteredItems(filtered);
-  };
-
+    setSelected(0);
+  }, [search]);
+  0;
+  useEffect(() => {
+    selected == 0 ? setFilteredItems(stocks3) : setFilteredItems(info?.stock);
+  }, [selected, info]);
+  console.log(info);
   return (
     <>
       <Toaster position="bottom-center" reverseOrder={false} />
-      <div
-        className={`navRow h-fit px-5 sticky
-        ${
-          pagenumVisible ? "top-0" : "top-[-100px]"
-        }  justify-between shadow-2xl tr300  ease-in-out `}
-      >
-        <div className="flex">
-          {!session ? (
-            <div onClick={() => signIn()} className="navBtn">
-              <FaUserAlt className="w-5 h-5" />
-              <button className="hidden lg:inline-flex ">
-                {screenResolution > 750 ? "Sign in" : ""}
-              </button>
-            </div>
-          ) : (
-            <div className="flex  navBtn justify-center items-center ">
-              <img
-                onClick={() => signOut()}
-                className="profilePic"
-                src={session.user.image}
-                alt=""
-              />
-              <div className="hidden md:inline-flex">{session.user.name}</div>
-            </div>
-          )}
-        </div>
-        <div
-          onClick={() =>
-            session
-              ? setFilteredItems(list)
-              : toast.custom((t) => (
-                  <div
-                    className={`${
-                      t.visible ? "animate-enter" : "animate-leave"
-                    } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
-                  >
-                    <div className="flex-1 w-0 p-4">
-                      <div className="flex items-start">
-                        <div className="ml-3 flex justify-center items-center flex-1">
-                          <p className=" font-medium text-[14px]  text-gray-900">
-                            Must be looged in To Add Favorites
-                          </p>
-                        </div>
-                        <div
-                          onClick={() => {
-                            window.open(
-                              "https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=380604098053-0pv7pqf3mefov41triiinodcqgdomlki.apps.googleusercontent.com&scope=openid%20email%20profile&response_type=code&redirect_uri=https%3A%2F%2Fstocks-nu.vercel.app%2Fapi%2Fauth%2Fcallback%2Fgoogle&state=_9Ktt-RLfzJMjWoT0e1WcP7zS79WfgfQgkXmXXc4tnk&code_challenge=MD3tm5gyfj8j7Q-dz0PX1yCuLaW3TdSncFoIW777Xy0&code_challenge_method=S256&service=lso&o2v=2&flowName=GeneralOAuthFlow"
-                            );
-                          }}
-                          className="flex items-center justify-center space-x-2 border-[0.5px] rounded-xl h-10 w-32 "
-                        >
-                          <FcGoogle className="w-5 h-5" />
-                          <button className="hidden lg:inline-flex ">
-                            {screenResolution > 750 ? "Sign in" : ""}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex border-l border-gray-200">
-                      <button
-                        onClick={() => toast.dismiss(t.id)}
-                        className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      >
-                        Close
-                      </button>
-                    </div>
-                  </div>
-                ))
-          }
-          className="navBtn "
-        >
-          <div
-            className={` ${
-              !active2 ? "text-blue-500" : "text-stone-700"
-            } hidden md:inline-flex`}
-          >
-            Favorites
-          </div>
-          <div className="relative  ">
-            <AiFillStar
-              className={`w-5 h-5 ${list?.length > 0 && "text-yellow-400"} `}
-            />
-
-            {list?.length > 0 && (
-              <div className="bg-red-500 absolute rounded-full translate-x-2 -translate-y-8 text-xs items-center justify-center flex  h-5 w-5 shadow-2xl border-[0.5px] text-white font-semibold  ">
-                {list?.length}
-              </div>
-            )}
-          </div>
-        </div>
-        <div
-          className={`${
-            active2 && "text-blue-500"
-          } cursor-pointer navBtn flex justify-center `}
-          onClick={() => {
-            setFilteredItems(stocks3);
-            setActive2(true);
-          }}
-        >
-          {screenResolution < 760 ? "ALL" : "All Stocks"}
-        </div>
-        <a className="navBtn    " onClick={() => setFrame(!frame)}>
-          {frame === true ? "Daily" : "Weekly"}
-        </a>
-        <div className=" hidden active:text-white border-[0.5px] bg-white   md:inline-block relative hover:scale-110 hover:-translate-y-1  shadow-xl rounded-2xl tr300  ">
-          {!searchTerm && (
-            <div className=" ">
-              <p className=" absolute  text-stone-700  rounded-lg  right-[50%]  transition-all ease-in duration-500 top-[26%] ">
-                {" "}
-                Ticker{" "}
-              </p>
-              <IoIosSearch className="absolute w-8 rounded-lg h-8 p-1 z-50 right-2 bg-slate-100 text-stone-700  transition-all ease-in duration-500 top-[17%] " />
-            </div>
-          )}
-          <input
-            placeholder="Search.."
-            className=" inputCss placeholder:text-sm "
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
-        <div
-          onClick={() =>
-            numColumns == 3 ? setNumColumns(1) : setNumColumns(numColumns + 1)
-          }
-          className="relative  navBtn  flex justify-center items-center "
-        >
-          <BsFillGrid1X2Fill
-            className={`${active && "text-blue-500"} h-5 w-5  `}
-          />
-          {active && (
-            <div
-              onMouseLeave={() => setActive(false)}
-              className="absolute rounded-xl  p-3 translate-y-[100px] bg-stone-100   items-center justify-center"
-            >
-              {[1, 2].map((value) => (
-                <button
-                  key={value}
-                  className={`h-10 w-10  backdrop-blur-2xl  hover:shadow-2xl border-[0.5px] rounded-full ${
-                    numColumns === value
-                      ? "text-white bg-blue-500 shadow-lg backdrop-blur-2xl "
-                      : "backdrop-blur-2xl bg-slate-50 text-gray-700"
-                  } border-2 border-gray-200 flex items-center justify-center focus:outline-none`}
-                  onClick={() => setNumColumns(value)}
-                >
-                  {value}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-      <div className=" min-h-screen space-y-4  backdrop-blur-lg items-center justify-center h py-2">
+      <Navbar session={session} />
+      <div className=" min-h-screen space-y-4  bg-white backdrop-blur-lg items-center justify-center h py-2">
         <div
           className={` mt-4   grid-cols-1 md:grid-cols-2 xl:grid-cols-3  grid  gap-2 `}
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
-          }}
         >
           {filteredItems
-            .slice(pageNum, pageNum + 20)
+            ?.slice(pageNum, pageNum + 20)
 
             .map((x, i) => (
               <StockCard
                 x={x}
                 i={i}
-                frame={frame}
-                list={list}
+                list={info?.stock}
                 user={session?.user?.email}
                 info={info}
-                numColumns={numColumns}
                 width={pageNum}
-                comments={comments
+                comments={info?.comments
                   ?.map((item) => item.stock == x && item.info)
                   .filter(Boolean)}
               />
@@ -1485,7 +1303,7 @@ const Home = () => {
           className="w-10 hover:text-blue-500  rotate-180 h-10"
         />
 
-        <p>{pageNum + 20}</p>
+        <p>{filteredItems.length}</p>
         <AiOutlineForward
           className="w-10 hover:text-blue-500  h-10"
           onClick={() => {
