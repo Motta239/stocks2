@@ -21,6 +21,7 @@
     "react-icons": "^4.7.1",
     "react-new-window": "^1.0.1",
     "react-redux": "^8.0.5",
+    "react-scroll-snap": "^1.0.0",
     "reactjs-popup": "^2.0.5",
     "recoil": "^0.7.7",
     "redux": "^4.2.1"

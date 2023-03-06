@@ -1,6 +1,6 @@
 import React from "react";
 import { db } from "../firebaseConfig";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   doc,
   setDoc,
@@ -11,32 +11,15 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { AiFillStar } from "react-icons/ai";
-import { MdCancel } from "react-icons/md";
+
 import { BsFillEraserFill } from "react-icons/bs";
 import { TbChartDots3 } from "react-icons/tb";
 import { TiChartLine } from "react-icons/ti";
-
+import { WiTime7 } from "react-icons/wi";
 import TradingViewWidget from "./tradingViewChart";
 import toast, { Toaster } from "react-hot-toast";
-function stockCard({ x, i, frame, list, user, comments, width }) {
-  const [inputValue, setInputValue] = useState("");
-  const [editValue, setEditValue] = useState("");
-  const inputRef = useRef(null);
-  const editRef = useRef(null);
-
-  const [editMode, setEditMode] = useState(false);
-  const [showStar, setShowStar] = useState(false);
-  const [toggole, setToggole] = useState(false);
-  const [toggoleBetweenFinToTradingView, setToggoleBetweenFinToTradingView] =
-    useState(true);
-  const tradingViewURL = `https://www.tradingview.com/chart/?symbol=${x}`;
-  const finvizStockUrl = `https://charts2-node.finviz.com/chart.ashx?cs=l&t=${x}&tf=${
-    frame ? "d" : "w"
-  }&s=linear&ct=candle_stick${
-    toggole
-      ? "&o[0][ot]=sma&o[0][op]=50&o[0][oc]=FF8F33C6&o[1][ot]=sma&o[1][op]=200&o[1][oc]=DCB3326D&o[2][ot]=sma&o[2][op]=20&o[2][oc]=DC32B363&o[3][ot]=patterns&o[3][op]=&o[3][oc]=000"
-      : ""
-  }`;
+import Comment from "./comment";
+function stockCard({ x, i, list, user, comments, width }) {
   const checkedInputs = [
     {
       name: "Long",
@@ -107,11 +90,26 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       color: "green",
     },
   ];
+  const [inputValue, setInputValue] = useState("");
+  const [checkedInputs2, setCheckedInputs] = useState(checkedInputs);
+  const [editValue, setEditValue] = useState("");
+  const [color, setColor] = useState("");
+  const [timeFrame, setTimeFrame] = useState(true);
+  const inputRef = useRef(null);
+  const [toggole, setToggole] = useState(false);
+  const [toggoleBetweenFinToTradingView, setToggoleBetweenFinToTradingView] =
+    useState(true);
+  const tradingViewURL = `https://www.tradingview.com/chart/?symbol=${x}`;
+  const finvizStockUrl = `https://charts2-node.finviz.com/chart.ashx?cs=l&t=${x}&tf=${
+    timeFrame ? "d" : "w"
+  }&s=linear&ct=candle_stick${
+    toggole
+      ? "&o[0][ot]=sma&o[0][op]=50&o[0][oc]=FF8F33C6&o[1][ot]=sma&o[1][op]=200&o[1][oc]=DCB3326D&o[2][ot]=sma&o[2][op]=20&o[2][oc]=DC32B363&o[3][ot]=patterns&o[3][op]=&o[3][oc]=000"
+      : ""
+  }`;
+
   const handleChange = () => {
     setInputValue(inputRef.current.value);
-  };
-  const handleChange2 = () => {
-    setEditMode(editRef.current.value);
   };
   const addToFavorites = async () => {
     const docRef = doc(db, "users", user);
@@ -135,6 +133,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
         : toast.error(`${x} Removed`);
     }
   };
+
   const handleSubmit = async (event) => {
     const docRef = doc(db, "users", user);
     event.preventDefault();
@@ -145,7 +144,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
         ? inputRef.current.focus()
         : await updateDoc(doc(db, "users", user), {
             comments: arrayUnion({
-              info: `${frame ? "D" : "W"} : ${
+              info: `${timeFrame ? "D" : "W"} : ${
                 inputValue.length == 0 ? editValue : inputValue
               }`,
               stock: x,
@@ -161,20 +160,19 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       });
     }
   };
-  const handleSubmit2 = async (m) => {
-    const docRef = doc(db, "users", user);
-    const docSnap = await getDoc(docRef);
 
-    await updateDoc(doc(db, "users", user), {
-      comments: arrayRemove({
-        info: m,
-        stock: x,
-      }),
-    });
-  };
+  useEffect(() => {
+    inputValue.length == 0 && setCheckedInputs(checkedInputs);
+  }, [inputValue]);
 
-  function handleCheckboxChange(e, color) {
+  function handleCheckboxChange(e) {
     const { value, checked } = e.target;
+    setCheckedInputs(
+      checkedInputs.filter((input) => {
+        return input.color === color;
+      })
+    );
+
     !inputValue.includes(value)
       ? setInputValue([...inputValue, value])
       : setInputValue(
@@ -182,24 +180,17 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             return item !== value;
           })
         );
-
     e.target.checked = 0;
   }
-
   return (
     <div
       key={i}
-      className={`stockCard ${x} py-5  space-y-4 bg-white border-[#709eff2b] `}
+      className={`stockCard ${x} py-5   space-y-4 bg-white border-[#709eff2b]  `}
     >
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className={`stockImgRow ${x} `}>
         {toggoleBetweenFinToTradingView ? (
-          <img
-            className="w-full "
-            key={i}
-            src={finvizStockUrl}
-            alt="A picture"
-          />
+          <img key={i} src={finvizStockUrl} className="w-full" />
         ) : (
           <TradingViewWidget stock={x} width={width} />
         )}
@@ -224,7 +215,13 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
         >
           {x}
         </a>
-        <div className="flex text-gray-700  border-[1px] rounded-lg h-12  justify-around w-32   items-center   ">
+        <div className="flex text-gray-700  space-x-2 rounded-lg h-12  justify-around w-32   items-center   ">
+          <WiTime7
+            className={` ${
+              timeFrame ? "text-gray-50 bg-blue-500 " : ""
+            } h-8 w-8 border-[1px] p-1 hover:text-gray-50 hover:bg-blue-500 hover:shadow-lg rounded-lg `}
+            onClick={() => setTimeFrame(!timeFrame)}
+          />
           <TbChartDots3
             className={` ${
               toggole ? "text-gray-50 bg-blue-500  " : ""
@@ -244,14 +241,15 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
       <div
         className={`flex flex-wrap  items-center  justify-center  text-[10px] md:text-[12px] space-x-1 md:space-x-3`}
       >
-        {checkedInputs.map(({ name, color }) => (
+        {checkedInputs2.map(({ name, color }) => (
           <label
+            onClick={() => setColor(color)}
             style={{
               backgroundColor: `${inputValue.includes(name) ? color : "white"}`,
             }}
             className={` ${
               inputValue.includes(name) && ` text-white font-bold   `
-            } cbtn p-2 rounded-full md:text-[15px] text-gray-700 text-[10px] px-3 my-1 hover:bg-stone-100  font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
+            } cbtn p-2 rounded-full md:text-[12px] text-gray-700 text-[10px] px-3 my-1 hover:bg-stone-100  font-medium  backdrop-blur-lg border  shadow-lg flex items-center justify-center `}
           >
             <input
               className=" opacity-0 hidden active:outline-0  focus:border-transparent focus:ring-0 !outline-none   "
@@ -275,7 +273,7 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
             />
           )}
           <input
-            className="  px-2  h-10  inputCss border-[0.4px]  w-1/2  shadow-none   "
+            className="  px-2  h-10  input  max-w-[24rem] bg-stone-100 min-w-[10rem] border-[0.4px]  w-1/2  shadow-none   "
             type="text"
             ref={inputRef}
             value={inputValue}
@@ -290,46 +288,8 @@ function stockCard({ x, i, frame, list, user, comments, width }) {
           </button>
         </form>
       }
-      <div className="flex-wrap flex   text-[10px] md:text-[15px]  md:space-x-3 ">
-        {comments &&
-          comments.map((item, i) => (
-            <div
-              key={i}
-              onDoubleClick={() => setEditMode(true)}
-              onMouseEnter={() => setShowStar(true)}
-              onMouseLeave={() => {
-                setEditMode(false);
-
-                setShowStar(false);
-              }}
-              className="flex items-center relative space-x-2 comment rounded-xl  tr300  ease-in-out border-[0.5px]   "
-            >
-              {editMode ? (
-                <div className="flex">
-                  <input
-                    ref={editRef}
-                    value={`${editValue}`}
-                    onChange={handleChange2}
-                    className=" text-black "
-                  />
-                  <button
-                    className=" rounded-full h-10 w-24 px-4  border hover:bg-blue-500 hover:text-white  bg-white text-blue-500"
-                    type="submit"
-                  >
-                    Send
-                  </button>
-                </div>
-              ) : (
-                <div className="  ">{item}</div>
-              )}
-              {showStar && (
-                <MdCancel
-                  onClick={() => handleSubmit2(item)}
-                  className="w-5 h-5 hover:text-red-500 "
-                />
-              )}
-            </div>
-          ))}
+      <div className="flex-wrap flex  space-x-1  text-[10px] md:text-[15px]  md:space-x-3 ">
+        {comments && comments.map((item, i) => <Comment item={item} i={i} />)}
       </div>
     </div>
   );

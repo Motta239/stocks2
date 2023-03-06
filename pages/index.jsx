@@ -1,19 +1,15 @@
-import { useEffect, useState, useRef } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { db } from "../firebaseConfig";
 import { doc, onSnapshot } from "firebase/firestore";
-import { FaUserAlt } from "react-icons/fa";
-import { AiFillStar, AiOutlineForward } from "react-icons/ai";
-import { BsFillGrid1X2Fill } from "react-icons/bs";
-import { IoIosSearch } from "react-icons/io";
-import { FcGoogle } from "react-icons/fc";
-import StockCard from "./stockCard";
-import Navbar from "./navbar";
+import { AiOutlineForward } from "react-icons/ai";
 import { useRecoilState } from "recoil";
 import { searchValueAtom } from "../atoms/searchValueAtom";
 import { selectedAtom } from "../atoms/selectedAtom";
-
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import StockCard from "./stockCard";
+import Navbar from "./navbar";
+import { list } from "firebase/storage";
 const Home = () => {
   const { data: session } = useSession();
   const stocks3 = [
@@ -1224,15 +1220,13 @@ const Home = () => {
   const [selected, setSelected] = useRecoilState(selectedAtom);
   const [filteredItems, setFilteredItems] = useState(stocks3);
   const [pageNum, setPageNum] = useState(0);
-  const [info, setInfo] = useState();
   const [pagenumVisible, setPagenumVisible] = useState(true);
-
+  const [info, setInfo] = useState();
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "users", `${user}`), (doc) => {
       setInfo(doc.data());
     });
   }, [session, db]);
-
   useEffect(() => {
     let timer;
     let timer2;
@@ -1252,45 +1246,101 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = stocks3
-      .filter((item, index) => stocks3.indexOf(item) === index)
+    const selectedList = selected == 0 ? stocks3 : info?.stock;
+    const filtered = selectedList
+      .filter((item, index) => selectedList?.indexOf(item) === index)
       .filter((item) => item.toLowerCase().includes(search.toLowerCase()));
     setFilteredItems(filtered);
-    setSelected(0);
+    // setSelected(0);
   }, [search]);
-  0;
+
   useEffect(() => {
     selected == 0 ? setFilteredItems(stocks3) : setFilteredItems(info?.stock);
   }, [selected, info]);
-  console.log(info);
+  console.log(filteredItems);
   return (
-    <>
-      <Toaster position="bottom-center" reverseOrder={false} />
+    <div className="bg-stone-100">
       <Navbar session={session} />
+      <div className="stats shadow flex bg-stone-100 ">
+        <div className="stat">
+          <div className="stat-figure text-primary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="inline-block w-8 h-8 stroke-current"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              ></path>
+            </svg>
+          </div>
+          <div className="stat-title text-gray-700 ">Total Stocks</div>
+          <div className="stat-value text-primary">{stocks3.length}</div>
+          <div className="stat-desc text-gray-700">
+            21% more than last month
+          </div>
+        </div>
+
+        <div className="stat">
+          <div className="stat-figure text-secondary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="inline-block w-8 h-8 stroke-current"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              ></path>
+            </svg>
+          </div>
+          <div className="stat-title text-gray-700">Total Favorites</div>
+          <div className="stat-value text-secondary">{info?.stock?.length}</div>
+          <div className="stat-desc text-gray-700">
+            21% more than last month
+          </div>
+        </div>
+
+        <div className="stat">
+          <div className="stat-figure text-secondary">
+            <div className="avatar online">
+              <div className="w-16 rounded-full">
+                <img src={session?.user.image} />
+              </div>
+            </div>
+          </div>
+          <div className="stat-value text-primary">86%</div>
+          <div className="stat-title">Tasks done</div>
+          <div className="stat-desc text-secondary">31 tasks remaining</div>
+        </div>
+      </div>
       <div className=" min-h-screen space-y-4  bg-white backdrop-blur-lg items-center justify-center h py-2">
         <div
-          className={` mt-4   grid-cols-1 md:grid-cols-2 xl:grid-cols-3  grid  gap-2 `}
+          className={` mt-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 grid flex-col  gap-2 `}
         >
-          {filteredItems
-            ?.slice(pageNum, pageNum + 20)
-
-            .map((x, i) => (
-              <StockCard
-                x={x}
-                i={i}
-                list={info?.stock}
-                user={session?.user?.email}
-                info={info}
-                width={pageNum}
-                comments={info?.comments
-                  ?.map((item) => item.stock == x && item.info)
-                  .filter(Boolean)}
-              />
-            ))}
+          {filteredItems?.slice(pageNum, pageNum + 20).map((x, i) => (
+            <StockCard
+              x={x}
+              i={i}
+              list={info?.stock}
+              user={session?.user?.email}
+              info={info}
+              width={pageNum}
+              comments={info?.comments
+                ?.map((item) => item.stock == x && item.info)
+                .filter(Boolean)}
+            />
+          ))}
         </div>
       </div>
       <div
-        onMouseEnter={() => setPagenumVisible(true)}
         className={`flex items-center   ${
           pagenumVisible ? "inset-[50%]  bottom-10  -translate-x-[50%] " : ""
         }   text-gray-700 hover:scale-110 tr300 sticky rounded-2xl border-[0.5px] tr300 ease-in-out  hover:bg-slate-50 bg-white shadow-xl h-14 z-50 w-36 space-x-6 m-8 justify-center `}
@@ -1313,7 +1363,8 @@ const Home = () => {
         />
       </div>
       )
-    </>
+      <Toaster position="bottom-center" reverseOrder={false} />
+    </div>
   );
 };
 

@@ -3,19 +3,20 @@ import { useEffect, useState, useRef } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { TfiSearch } from "react-icons/tfi";
 import { CgMenu } from "react-icons/cg";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { searchValueAtom } from "../atoms/searchValueAtom";
 import { selectedAtom } from "../atoms/selectedAtom";
-
+import Link from "next/link";
 function navbar({ session }) {
-  const menuItems = ["All Stocks", "Favorites", "Daily"];
+  const menuItems = ["All Stocks", "Favorites", "Settings"];
   const [search, setSearch] = useRecoilState(searchValueAtom);
   const [selected, setSelected] = useRecoilState(selectedAtom);
-  console.log(search);
 
   return (
-    <div className="navbar sticky shadow-md backdrop-blur-lg z-50 inset-0 text-gray-700 bg-stone-100">
+    <div
+      className={`navbar  shadow-md sticky backdrop-blur-lg z-50 transition-all ease-in-out  duration-700 inset-0 text-gray-700 bg-stone-100`}
+    >
       <div className="navbar-start ">
         <div className="dropdown md:hidden  ">
           <label tabIndex={0} className="btn btn-ghost btn-circle">
@@ -31,8 +32,10 @@ function navbar({ session }) {
                 className={` ${selected == i && "text-blue-500"}  normal-case`}
               >
                 <div className="">
+                  {/* <Link href="/favorites"> */}
                   <a className="flex-1"> {item}</a>
                   <a href=""></a>
+                  {/* </Link> */}
                 </div>
               </li>
             ))}
@@ -58,7 +61,9 @@ function navbar({ session }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             type="text"
-            placeholder="Search Stocks..."
+            placeholder={
+              selected == 0 ? "Search Stocks..." : "Search Favorites..."
+            }
             className="input text-xs  max-w-[24rem] border-gray-400 border-[0.6px] rounded-full border-opacity-100 h-8 bg-stone-100 min-w-[10rem] "
           />
           <TfiSearch className="w-5 h-5 top-1/2 right-4   indicator-item     " />
