@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { TfiSearch } from "react-icons/tfi";
 import { CgMenu } from "react-icons/cg";
+import { MdCancel } from "react-icons/md";
 import { signIn, signOut } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { searchValueAtom } from "../atoms/searchValueAtom";
@@ -66,7 +67,14 @@ function navbar({ session }) {
             }
             className="input text-xs  max-w-[24rem] border-gray-400 border-[0.6px] rounded-full border-opacity-100 h-8 bg-stone-100 min-w-[10rem] "
           />
-          <TfiSearch className="w-5 h-5 top-1/2 right-4   indicator-item     " />
+          {search.length == 0 ? (
+            <TfiSearch className="w-5 h-5 top-1/2 right-4   indicator-item     " />
+          ) : (
+            <MdCancel
+              onClick={() => setSearch("")}
+              className={`w-6 h-6 text-blue-500 indicator-item  top-1/2 right-4   hover:text-red-500 transition-all ease-in duration-300 `}
+            />
+          )}
         </div>
         <div className=" md:hidden dropdown dropdown-end">
           <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -106,7 +114,7 @@ function navbar({ session }) {
               <a className="justify-between">Profile</a>
             </li>
             <li>
-              <a>Settings</a>
+              <a href="#settings">Settings</a>
             </li>
             <li>
               <div className="">
@@ -114,6 +122,7 @@ function navbar({ session }) {
                 <a href="">2</a>
               </div>
             </li>
+
             <li>
               <div className="">
                 <a className="flex-1"> Dark Mode </a>.
@@ -144,6 +153,24 @@ function navbar({ session }) {
               </a>
             </li>
           </ul>
+        </div>
+      </div>
+
+      <input type="checkbox" id="my-modal" className="modal-toggle" />
+      <div className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">
+            Congratulations random Internet user!
+          </h3>
+          <p className="py-4">
+            You've been selected for a chance to get one year of subscription to
+            use Wikipedia for free!
+          </p>
+          <div className="modal-action">
+            <label htmlFor="my-modal" className="btn">
+              Yay!
+            </label>
+          </div>
         </div>
       </div>
     </div>

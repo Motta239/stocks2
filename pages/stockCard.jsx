@@ -19,6 +19,7 @@ import { WiTime7 } from "react-icons/wi";
 import TradingViewWidget from "./tradingViewChart";
 import toast, { Toaster } from "react-hot-toast";
 import Comment from "./comment";
+import Image from "next/image";
 function stockCard({ x, i, list, user, comments, width }) {
   const checkedInputs = [
     {
@@ -190,7 +191,14 @@ function stockCard({ x, i, list, user, comments, width }) {
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className={`stockImgRow ${x} `}>
         {toggoleBetweenFinToTradingView ? (
-          <img key={i} src={finvizStockUrl} className="w-full" />
+          <Image
+            width={600}
+            height={500}
+            loading="lazy"
+            key={i}
+            src={finvizStockUrl}
+            className="w-full"
+          />
         ) : (
           <TradingViewWidget stock={x} width={width} />
         )}
@@ -243,6 +251,7 @@ function stockCard({ x, i, list, user, comments, width }) {
       >
         {checkedInputs2.map(({ name, color }) => (
           <label
+            key={name}
             onClick={() => setColor(color)}
             style={{
               backgroundColor: `${inputValue.includes(name) ? color : "white"}`,
