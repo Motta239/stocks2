@@ -216,13 +216,19 @@ function stockCard({ x, i, list, user, comments, width }) {
         >
           <AiFillStar className={`w-10 h-10`} />
         </div>
-        <a
-          className="text-md w-32  flex justify-center h-12 items-center text-lg text-blue-600    hover:text-gray-900 hover:scale-105 "
-          href={tradingViewURL}
-          target="_blank"
+
+        <div
+          className="tooltip tooltip-primary tooltip-right"
+          data-tip="Click to Open in TradingView"
         >
-          {x}
-        </a>
+          <a
+            className="text-md w-32  flex justify-center h-12 items-center text-lg text-blue-600    hover:text-gray-900 hover:scale-105 "
+            href={tradingViewURL}
+            target="_blank"
+          >
+            {x}
+          </a>
+        </div>
         <div className="flex text-gray-700  space-x-2 rounded-lg h-12  justify-around w-32   items-center   ">
           <WiTime7
             className={` ${
