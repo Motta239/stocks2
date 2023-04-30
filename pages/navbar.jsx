@@ -9,14 +9,16 @@ import { useRecoilState } from "recoil";
 import { searchValueAtom } from "../atoms/searchValueAtom";
 import { selectedAtom } from "../atoms/selectedAtom";
 import Link from "next/link";
-function navbar({ session }) {
+function navbar({ session, scrollHeight }) {
   const menuItems = ["All Stocks", "Favorites", "Settings"];
   const [search, setSearch] = useRecoilState(searchValueAtom);
   const [selected, setSelected] = useRecoilState(selectedAtom);
 
   return (
     <div
-      className={`navbar  shadow-md sticky backdrop-blur-lg z-50 transition-all ease-in-out  duration-700 inset-0 text-gray-700 bg-stone-100`}
+      className={`navbar  shadow-md   ${
+        scrollHeight > 200 ? "sticky" : "hidden"
+      }  backdrop-blur-lg z-50 transition-all ease-in-out  duration-700 inset-0 text-gray-700 bg-stone-100`}
     >
       <div className="navbar-start ">
         <div className="dropdown md:hidden  ">

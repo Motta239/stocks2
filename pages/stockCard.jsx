@@ -11,12 +11,10 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { AiFillStar } from "react-icons/ai";
-
 import { BsFillEraserFill } from "react-icons/bs";
 import { TbChartDots3 } from "react-icons/tb";
 import { TiChartLine } from "react-icons/ti";
 import { WiTime7 } from "react-icons/wi";
-import TradingViewWidget from "./tradingViewChart";
 import toast, { Toaster } from "react-hot-toast";
 import Comment from "./comment";
 import Image from "next/image";
@@ -168,11 +166,12 @@ function stockCard({ x, i, list, user, comments, width }) {
 
   function handleCheckboxChange(e) {
     const { value, checked } = e.target;
-    setCheckedInputs(
-      checkedInputs.filter((input) => {
-        return input.color === color;
-      })
-    );
+
+    // setCheckedInputs(
+    //   checkedInputs.filter((input) => {
+    //     return input.color === color;
+    //   })
+    // );
 
     !inputValue.includes(value)
       ? setInputValue([...inputValue, value])
@@ -190,18 +189,14 @@ function stockCard({ x, i, list, user, comments, width }) {
     >
       <Toaster position="bottom-center" reverseOrder={false} />
       <div className={`stockImgRow ${x} `}>
-        {toggoleBetweenFinToTradingView ? (
-          <Image
-            width={600}
-            height={500}
-            loading="lazy"
-            key={i}
-            src={finvizStockUrl}
-            className="w-full"
-          />
-        ) : (
-          <TradingViewWidget stock={x} width={width} />
-        )}
+        <Image
+          width={600}
+          height={500}
+          loading="lazy"
+          key={i}
+          src={finvizStockUrl}
+          className="w-full"
+        />
       </div>
       <div className={`stockUpperRow items-center  flex ${x} `}>
         <div
