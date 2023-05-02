@@ -164,6 +164,19 @@ function stockCard({ x, i, list, user, comments, width }) {
     inputValue.length == 0 && setCheckedInputs(checkedInputs);
   }, [inputValue]);
 
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "f" || event.key === "F") {
+        addToFavorites(x);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [x]);
   function handleCheckboxChange(e) {
     const { value, checked } = e.target;
 
@@ -206,7 +219,7 @@ function stockCard({ x, i, list, user, comments, width }) {
           onClick={() =>
             user
               ? addToFavorites(x)
-              : toast.error(`Must Login To Add ${x} To Favorites `)
+              : toast.error(`Login To Add ${x} To Favorites `)
           }
         >
           <AiFillStar className={`w-10 h-10`} />

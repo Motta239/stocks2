@@ -7,7 +7,6 @@ import { TbMessageCircle2 } from "react-icons/tb";
 import { useRecoilState } from "recoil";
 import { searchValueAtom } from "../atoms/searchValueAtom";
 import { MoonLoader } from "react-spinners";
-import { Toaster } from "react-hot-toast";
 import { AiOutlineUser } from "react-icons/ai";
 import {
   AiOutlineStock,
@@ -6199,16 +6198,17 @@ const Home = () => {
     "ISRL",
     "BMR",
   ];
-
   const user = session?.user?.email;
   const [search, setSearch] = useRecoilState(searchValueAtom);
   const [filteredItems, setFilteredItems] = useState(stocksList);
   const [pageNum, setPageNum] = useState(0);
-  const [scrollHeight, setScrollHeight] = useState(0);
-  const [pagenumVisible, setPagenumVisible] = useState(true);
   const [info, setInfo] = useState();
   const inputRef = useRef(null);
-
+  const [value, setValue] = useState(1);
+  const [value1, setValue1] = useState(0);
+  const handleOnChange = (e) => {
+    setValue(e.target.value);
+  };
   //get the user Data from firebase
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "users", `${user}`), (doc) => {
@@ -6222,19 +6222,6 @@ const Home = () => {
       .filter((item) => item.toLowerCase().includes(search.toLowerCase()));
     setFilteredItems(filtered);
   }, [search]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const newScrollHeight = Math.round(window.scrollY);
-      setScrollHeight(newScrollHeight);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.key === "ArrowRight") {
@@ -6250,8 +6237,9 @@ const Home = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [pageNum]);
+  console.log(value);
   return (
-    <div className="bg-stone-100">
+    <div className="min-h-screen relative bg-white">
       <div className="stats shadow flex border bg-stone-100 ">
         <div className="stat ">
           <div className="stat-figure text-primary justify-between items-center flex h-20  flex-col ">
@@ -6267,7 +6255,7 @@ const Home = () => {
 
         <div className="stat  hover:bg-gray-200 rounded-xl">
           <div className="stat-figure text-secondary ">
-            <AiFillHeart className="inline-block w-8 h-8 stroke-current" />
+            <AiFillHeart className="inline-block w-8 h-8 stroke-current text-[#e81e1ee6]" />
           </div>
           <div className="stat-title text-gray-700">Total Favorites</div>
 
@@ -6284,7 +6272,7 @@ const Home = () => {
               Login{" "}
             </a>
           ) : (
-            <div className="stat-value text-secondary">
+            <div className="stat-value text-[#fabe14]">
               {info?.stock?.length}
             </div>
           )}
@@ -6292,15 +6280,15 @@ const Home = () => {
         </div>
         <div className="stat ">
           <div className="flex justify-between items-center ">
-            <div className="stat-value text-primary">86%</div>
-            <TbMessageCircle2 className="inline-block w-8 h-8 text-primary" />
+            <div className="stat-value text-[#14a518]">86%</div>
+            <TbMessageCircle2 className="inline-block w-8 h-8 text-[#40b0e0]" />
           </div>
           <div className="stat-title text-gray-700">of Stocks uncommented</div>
-          <div className="stat-desc text-secondary">31 Stock Commented </div>
+          <div className="stat-desc text-[#3338c7]">31 Stock Commented </div>
         </div>
-        <div className="stat pr-0 flex flex-col ">
+        <div className="stat pr-0 flex justify-between flex-col ">
           <div className="flex justify-between   ">
-            <div className="w-60 relative max-w-xs">
+            <div className="w-full relative min-w-[150px]  ">
               <input
                 ref={inputRef}
                 value={search}
@@ -6379,14 +6367,27 @@ const Home = () => {
               </ul>
             </div>
           </div>
+          <input
+            type="range"
+            min="1"
+            max="4"
+            className="range w-[95%] range-xs range-warning "
+            step="1"
+            value={value}
+            onChange={handleOnChange}
+          />
         </div>
       </div>
       {filteredItems.length > 0 ? (
-        <div className=" min-h-screen space-y-4  bg-white backdrop-blur-lg items-center justify-center h py-2">
+        <div className="  overflow-x-auto ">
           <div
-            className={` mt-4 grid-cols-1 md:grid-cols-1 xl:grid-cols-1 grid flex-col  gap-2 `}
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${value}, 1fr)`,
+            }}
+            className={` mt-4 gap-2 `}
           >
-            {filteredItems?.slice(pageNum, pageNum + 1).map((x, i) => (
+            {filteredItems?.slice(value1, value1 + 40).map((x, i) => (
               <StockCard
                 x={x}
                 i={i}
@@ -6420,50 +6421,24 @@ const Home = () => {
         </div>
       )}
       <div
-        className={`flex items-center   ${
-          pagenumVisible ? "inset-[50%]  bottom-10  -translate-x-[50%] " : ""
-        }   text-gray-700 hover:scale-110 tr300 sticky rounded-2xl border-[0.5px] tr300 ease-in-out  hover:bg-slate-50 bg-white shadow-xl h-14 z-50 w-36 space-x-6 m-8 justify-center `}
+        className={`flex justify-center items-center text-gray-700 hover:scale-110 tr300 sticky rounded-2xl`}
       >
         <AiOutlineForward
           onClick={() => {
-            !pageNum == 0 && setPageNum(pageNum - 1);
+            value1 !== 0 ? setValue1(value1 - 40) : setValue1(0);
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           className="w-10 hover:text-blue-500  rotate-180 h-10"
         />
 
-        <p>{pageNum + 1}</p>
+        <p className="w-24">{`${value1} - ${value1 + 40}`}</p>
         <AiOutlineForward
           className="w-10 hover:text-blue-500  h-10"
           onClick={() => {
-            pageNum < stocksList.length && setPageNum(pageNum + 1);
+            setValue1(value1 + 40);
             window.scrollTo({ top: 0, behavior: "auto" });
           }}
         />
-      </div>
-      )
-      <Toaster position="bottom-center" reverseOrder={false} />
-      <div className="">
-        <div className="modal" id="settings">
-          <div className="modal-box max-w-[47rem] h-[60%] space-y-3   bg-stone-100 text-gray-700">
-            <h3 className="font-bold flex justify-center text-lg">Settings</h3>
-            <div className="w-full flex items-center justify-center">
-              <div className="tabs w-max items-center bg-[#e1e1e1f0]  text-gray-900 justify-center tabs-boxed">
-                <a className="tab hover:text-primary text-gray-900 ">Privacy</a>
-                <a className="tab tab-active">Profile</a>
-                <a className="tab hover:text-primary text-gray-900 ">Data</a>
-              </div>
-            </div>
-            <div className="modal-action  ">
-              <a
-                href="#"
-                className="btn border-none bg-stone-200 hover:bg-gray-500 hover:text-stone-100 text-gray-700 "
-              >
-                Save
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
