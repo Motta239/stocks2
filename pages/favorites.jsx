@@ -17,7 +17,6 @@ const FavoritesPage = () => {
       unsubscribe();
     };
   }, [session, db, user, setUserData]);
-  console.log(userData);
   return (
     <div>
       <Header />
