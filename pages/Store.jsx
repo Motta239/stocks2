@@ -26,7 +26,7 @@ const reducer = (state, action) => {
 
 export const StoreContext = createContext();
 
-export const StoreProvider = ({ children }) => {
+const StoreProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
@@ -35,3 +35,5 @@ export const StoreProvider = ({ children }) => {
     </StoreContext.Provider>
   );
 };
+
+export default StoreProvider;

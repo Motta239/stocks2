@@ -4,7 +4,8 @@ import { db } from "../firebaseConfig";
 import Card from "./Card";
 import Header from "./Header";
 import { StoreContext } from "./Store";
-import { subscribeToUserData, filterData, fetchData } from "./utils";
+import { subscribeToUserData, fetchData } from "./utils";
+import filterData from "./utils";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 const Home = () => {
   const { data: session, status } = useSession();
@@ -26,7 +27,7 @@ const Home = () => {
   useEffect(() => {
     filterData(data, state.search, setFilteredItems);
     setValue1(0);
-  }, [state.search, data, setFilteredItems]);
+  }, [state.search]);
 
   useEffect(() => {
     fetchInitialData();

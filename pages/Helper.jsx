@@ -1,4 +1,4 @@
-export const generateStockUrl = (x, timeFrame, toggole, toggoleDark) => {
+const generateStockUrl = (x, timeFrame, toggole) => {
   const baseUrl =
     "https://charts2-node.finviz.com/chart.ashx?cs=l&t=%s&tf=%t&s=linear&ct=candle_stick&tm=d%o";
   const tf = timeFrame ? "d" : "w";
@@ -10,6 +10,6 @@ export const generateStockUrl = (x, timeFrame, toggole, toggoleDark) => {
     .replace("%s", x)
     .replace("%t", tf)
     .replace("%o", optionalParams);
-  // .replace("%o", toggoleDark);
 };
-// #232630
+
+export default generateStockUrl;

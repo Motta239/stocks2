@@ -15,7 +15,7 @@ import Image from "next/image";
 import FormComponent from "./CardComponents/FormComponent";
 import CheckboxGroup from "./CardComponents/CheckedboxGroup";
 import StockUpperRow from "./CardComponents/StockUpperRow";
-import { generateStockUrl } from "./Helper";
+import generateStockUrl from "./Helper";
 import {
   addToFavorites,
   fetchData,

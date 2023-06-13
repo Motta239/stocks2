@@ -13,7 +13,7 @@ const FormComponent = ({
       className="flex items-center justify-center space-x-2"
       onSubmit={handleSubmit}
     >
-      {inputValue.length > 0 && (
+      {inputValue?.length > 0 && (
         <BsFillEraserFill
           onClick={() => setInputValue("")}
           className="w-6 h-6 text-blue-500 hover:text-red-500 transition-all ease-in duration-300"

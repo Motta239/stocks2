@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { TbMessageCircle2 } from "react-icons/tb";
-import { subscribeToUserData, filterData, fetchData } from "./utils";
+import { subscribeToUserData, fetchData } from "./utils";
 import { MoonLoader } from "react-spinners";
 import Link from "next/link";
 import {
