@@ -27,7 +27,7 @@ const Home = () => {
   useEffect(() => {
     filterData(data, state.search, setFilteredItems);
     setValue1(0);
-  }, [state.search]);
+  }, []);
 
   useEffect(() => {
     fetchInitialData();
