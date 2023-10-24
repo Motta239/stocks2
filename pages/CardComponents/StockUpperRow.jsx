@@ -45,7 +45,7 @@ const StockUpperRow = ({
           {x}
         </a>
       </div>
-      <div className="flex text-gray-700 space-x-2 rounded-lg h-12 justify-around w-32 items-center">
+      <div className="flex text-gray-700 space-x-2 rounded-lg h-12 justify-around  items-center">
         <WiTime7
           className={`${
             timeFrame ? "" : "text-gray-50 bg-blue-500"
