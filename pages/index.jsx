@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { db } from "../firebaseConfig";
 import Card from "./Card";
@@ -7,6 +7,7 @@ import { StoreContext } from "./Store";
 import { subscribeToUserData, fetchData } from "./utils";
 import filterData from "./utils";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
+
 const Home = () => {
   const { data: session, status } = useSession();
   const user = session?.user?.email;
@@ -27,7 +28,7 @@ const Home = () => {
   useEffect(() => {
     filterData(data, state.search, setFilteredItems);
     setValue1(0);
-  }, []);
+  }, [data, state.search]);
 
   useEffect(() => {
     fetchInitialData();
@@ -37,6 +38,7 @@ const Home = () => {
     try {
       const responseData = await fetchData("/api/data");
       setData(responseData || []);
+      filterData(responseData, state.search, setFilteredItems);
     } catch (error) {
       console.error("Error fetching initial data:", error);
     }
