@@ -51,7 +51,7 @@ function Header() {
   }, []);
 
   return (
-    <div className="stats shadow rounded-none w-fit sticky top-0 z-50 flex border bg-stone-100 ">
+    <div className="stats shadow rounded-none w-[100%] lg:w-fit sticky top-0 z-50 flex border bg-stone-100 ">
       <Link href="/">
         <div className="stat   hover:bg-gray-200  ">
           <div className="stat-figure text-primary justify-between items-center flex h-20  flex-col ">
