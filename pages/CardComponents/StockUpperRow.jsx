@@ -26,7 +26,7 @@ const StockUpperRow = ({
   return (
     <div className={`stockUpperRow items-center flex ${x}`}>
       <div
-        className={`w-32 flex justify-center items-center h-12 hover:scale-105 ${
+        className={` flex justify-center items-center h-12 hover:scale-105 ${
           !list?.includes(x) ? "text-gray-700" : "text-yellow-400"
         }`}
         onClick={handleAddToFavorites}
@@ -39,7 +39,7 @@ const StockUpperRow = ({
         data-tip="Click to Open in TradingView"
       >
         <a
-          className="text-lg w-32 flex justify-center h-12 items-center text-blue-600 hover:text-gray-900 hover:scale-105"
+          className="text-lg  flex justify-center h-12 items-center text-blue-600 hover:text-gray-900 hover:scale-105"
           target="_blank"
         >
           {x}
