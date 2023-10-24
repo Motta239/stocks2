@@ -45,7 +45,7 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center relative bg-white">
+    <div >
       <Header />
       {filteredItems.length > 0 ? (
         <div className="overflow-x-auto">
