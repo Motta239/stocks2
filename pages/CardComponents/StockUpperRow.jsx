@@ -34,17 +34,7 @@ const StockUpperRow = ({
         <AiFillStar className="w-10 h-10" />
       </div>
 
-      <div
-        className="tooltip tooltip-primary tooltip-right"
-        data-tip="Click to Open in TradingView"
-      >
-        <a
-          className="text-lg  flex justify-center h-12 items-center text-blue-600 hover:text-gray-900 hover:scale-105"
-          target="_blank"
-        >
-          {x}
-        </a>
-      </div>
+  
       <div className="flex text-gray-700 space-x-2 rounded-lg h-12 justify-around  items-center">
         <WiTime7
           className={`${
