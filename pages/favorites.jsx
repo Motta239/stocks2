@@ -4,6 +4,8 @@ import Card from "./Card";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { db } from "../firebaseConfig";
+import { StoreContext } from "./Store";
+
 import { subscribeToUserData } from "./utils";
 const FavoritesPage = () => {
   const { data: session, status } = useSession();
@@ -12,7 +14,7 @@ const FavoritesPage = () => {
   //fetch favorites list
   useEffect(() => {
     const unsubscribe = subscribeToUserData(user, db, setUserData);
-
+  const { state, dispatch } = useContext(StoreContext);
     return () => {
       unsubscribe();
     };
@@ -20,18 +22,26 @@ const FavoritesPage = () => {
   return (
     <div>
       <Header />
-      {userData?.stock?.map((x, i) => (
-        <Card
-          x={x}
-          i={i}
-          user={user}
-          list={userData?.stock}
-          info={userData}
-          comments={userData?.comments
-            ?.map((item) => item.stock == x && item.info)
-            .filter(Boolean)}
-        />
-      ))}
+      <div
+        style={{
+          display: "grid",
+         gridTemplateColumns: `repeat(${state.value}, 1fr)`,
+          gap: "2rem", // Adjust the gap as needed
+        }}
+      >
+        {userData?.stock?.map((x, i) => (
+          <Card
+            x={x}
+            i={i}
+            user={user}
+            list={userData?.stock}
+            info={userData}
+            comments={userData?.comments
+              ?.map((item) => item.stock == x && item.info)
+              .filter(Boolean)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
