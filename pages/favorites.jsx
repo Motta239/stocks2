@@ -12,9 +12,9 @@ const FavoritesPage = () => {
   const user = session?.user?.email;
   const [userData, setUserData] = useState(null);
   //fetch favorites list
+  const { state, dispatch } = useContext(StoreContext);
   useEffect(() => {
     const unsubscribe = subscribeToUserData(user, db, setUserData);
-  const { state, dispatch } = useContext(StoreContext);
     return () => {
       unsubscribe();
     };
