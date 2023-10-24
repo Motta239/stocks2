@@ -3,7 +3,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import Card from "./Card";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 import { db } from "../firebaseConfig";
 import { StoreContext } from "./Store";
 
