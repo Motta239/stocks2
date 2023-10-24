@@ -58,7 +58,7 @@ function Header() {
             <AiOutlineStock className="inline-block w-8 h-8 stroke-current" />
             <AiOutlinePlus className="inline-block w-7 h-7 text-[#363636] rounded-full p-1 hover:bg-[#d1ccff75] hover:text-gray-500 " />
           </div>
-          <div className="stat-title text-gray-700 ">Total Stocks</div>
+          <div className="stat-title text-gray-700 ">Tota Stocks</div>
           <div className="stat-value text-primary">{data?.length}</div>
           <div className="stat-desc text-gray-700">
             21% more than last month
